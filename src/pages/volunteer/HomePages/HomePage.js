@@ -4,7 +4,7 @@ import { Card,Title,} from "react-native-paper";
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 
-const HomePage =()=>{
+const HomePage =({navigation})=>{
 
 const [event , setEvent] = useState([]);
 // useEffect for fetching all events list in the screen
@@ -22,6 +22,10 @@ const [event , setEvent] = useState([]);
 // calculate the widthe of each card based on the 
 const screenWidth = Dimensions.get('window').width;
 const cardWidth = (screenWidth - 40) / 2;
+
+const handleNavigation=()=>{
+   navigation.navigate("bottomTab");
+}
    return(
     <SafeAreaView style={styles.container}>
       <View style={styles.AppBarView}>
@@ -36,14 +40,14 @@ const cardWidth = (screenWidth - 40) / 2;
          <ScrollView contentContainerStyle={styles.cardView}>
             {event.map((eventName,index)=>(
                <View key={index} style={styles.cardContainer}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={handleNavigation}>
                      <Card key={index} style={[styles.cardStyle ,{width:cardWidth -10 , height:cardWidth+40}]}>
                         <Card.Content >
                            <Card.Cover style={styles.eventImage} source={require('./../../../images/google.jpeg')} />
                         
                         </Card.Content>
                         <Card.Content style={styles.eventNameView}> 
-                           <Title style={{ fontWeight:'300', fontSize: eventName.length > 6 ? 20 : 20 ,letterSpacing:0.32}} numberOfLines ={2} ellipsizeMode="tail">{eventName}</Title> 
+                           <Title style={{ fontWeight:'300', fontSize: eventName.length > 6 ? 16 : 16 ,letterSpacing:0.32}} numberOfLines ={2} ellipsizeMode="tail">{eventName}</Title> 
                         </Card.Content>
                      </Card>
                   </TouchableOpacity>
