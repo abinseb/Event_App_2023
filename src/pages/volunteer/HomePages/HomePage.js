@@ -47,7 +47,7 @@ const handleNavigation=()=>{
                         
                         </Card.Content>
                         <Card.Content style={styles.eventNameView}> 
-                           <Title style={{ fontWeight:'300', fontSize: eventName.length > 6 ? 16 : 16 ,letterSpacing:0.32}} numberOfLines ={2} ellipsizeMode="tail">{eventName}</Title> 
+                           <Title style={{ fontWeight:'300', fontSize: eventName.length > 6 ? 16 : 16 ,letterSpacing:0.32 , paddingBottom:10}} numberOfLines ={2} ellipsizeMode="tail">{eventName}</Title> 
                         </Card.Content>
                      </Card>
                   </TouchableOpacity>
@@ -137,6 +137,7 @@ cardContainer: {
  eventNameView:{
    alignSelf:'center',
    alignItems:'center',
+   paddingBottom:10,
  },
  eventNameText:{
   
