@@ -14,16 +14,16 @@ const ScanQR=({navigation})=>{
         navigation.goBack();
     }
     const navigationToVerify=()=>{
-        navigation.navigate("TopTab");
+        navigation.navigate("Input Data");
     }
     return(
         <SafeAreaView style={styles.container}>
+            <TouchableOpacity onPress={handleBackNavigation} style={styles.backNavigationTouchable}>
             <View style={styles.backNavigationView}>
-                <TouchableOpacity onPress={handleBackNavigation}>
-                    <FontAwesome5 name="less-than" size={16} color="black" />
+                
+                    <FontAwesome5 name="less-than" size={16} color="black" /></View>
                 </TouchableOpacity>
                
-            </View>
             {scanner ==true?
             <BarCodeScan />  //barcode scanning 
              :
@@ -97,17 +97,22 @@ const styles = StyleSheet.create({
         paddingLeft:4
     },
     backNavigationView:{
-        top:0,
-        position:'absolute',
+       
         height:40,
         width:40,
         backgroundColor:'#ffff',
         borderRadius:22,
-        margin:10,
-        marginTop:40,
+        // margin:10,
+        // marginTop:40,
         alignItems:'center',
         justifyContent:'center',
 
+    },
+    backNavigationTouchable:{
+        top:0,
+        position:'absolute',
+        marginTop:40,
+        margin:10,
     }
 
 

@@ -9,12 +9,14 @@ const SingleUserVerification = ({navigation}) => {
   }
   return (
     <SafeAreaView style={styles.container}>
-        <View style={styles.backNavigationView}>
-          <TouchableOpacity onPress={navigationToScan}>
-            <FontAwesome5 name="less-than" size={20} color="black" />
+        
+          <TouchableOpacity onPress={navigationToScan} style={styles.touchable} >
+            <View style={styles.backNavigationView}>
+              <FontAwesome5 name="less-than" size={20} color="black" />
+            </View>
           </TouchableOpacity>
                
-        </View>
+     
         
         <View style={styles.innerBox}>
             {/* Content for innerBox */}
@@ -151,9 +153,9 @@ const styles = StyleSheet.create({
     width:170,
     backgroundColor:'#012E41'
   },
+
   backNavigationView:{
-    top:0,
-    position:'absolute',
+    
     height:40,
     width:40,
     backgroundColor:'#ffff',
@@ -162,7 +164,11 @@ const styles = StyleSheet.create({
     marginTop:40,
     alignItems:'center',
     justifyContent:'center',
+},
 
+touchable:{
+  top:0,
+  position:'absolute',
 }
   
 });

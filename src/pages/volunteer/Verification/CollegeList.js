@@ -2,7 +2,7 @@ import React from 'react';
 import {View,Text,StyleSheet} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchableDropDown from 'react-native-searchable-dropdown';
-const BulkVerification =()=>{
+const BulkVerification =({navigation})=>{
 
     var items = [
         {
@@ -38,7 +38,9 @@ const BulkVerification =()=>{
           name: 'Swift',
         },
       ];
-
+const handlePassTheSelection=()=>{
+  navigation.navigate('TopTab');
+}
 
     return(
        <SafeAreaView style={styles.container}>
@@ -48,7 +50,7 @@ const BulkVerification =()=>{
           {/* <View style={styles.viewSearchableDropDown}> */}
             <SearchableDropDown
               onTextChange={(text) => console.log(text)}
-              // onItemSelect={}
+              onItemSelect={handlePassTheSelection}
               containerStyle={{ paddingTop: 50 }}
               textInputStyle={{
                   padding: 12,

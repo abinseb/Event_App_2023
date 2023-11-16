@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet,Text,Image ,ScrollView} from "react-native";
 import { Card,Checkbox } from "react-native-paper";
+
 const NotVerifiedToVerify=()=>{
 
     const listOfStudent =[
@@ -42,7 +43,18 @@ const NotVerifiedToVerify=()=>{
         },
     ];
 
-    const [list, setList] =useState([]);
+    const [isChecked , setIsChecked ] = useState(listOfStudent.map(()=>false));
+    const handleCheckboxPressed=(id)=>{
+        const newCheckedState = [isChecked];
+            newCheckedState[id] = !isChecked[id];
+
+        console.log(id,newCheckedState);
+        setIsChecked(newCheckedState);
+
+    };
+ 
+    
+
     return(
         <SafeAreaView style={styles.container}> 
             <View style={styles.innerBox}>
@@ -51,8 +63,9 @@ const NotVerifiedToVerify=()=>{
                 </View>
                 
                 {/* cards are inside the scroll view*/}
-                <ScrollView contentContainerStyle={styles.cardView}>
+                <ScrollView contentContainerStyle={styles.cardView}  >
                 {listOfStudent.map((value,index)=>(
+
                     <Card style={styles.cardStyle} key={index}>
                         <Card.Content style={styles.cardContentStyle}>
                             <Image style={styles.imageStyle} source={require('../../../images/user2.png')}></Image>
@@ -63,7 +76,7 @@ const NotVerifiedToVerify=()=>{
                                 <Text style={styles.workshopTxt}>Google</Text>
                             </View>
                             <View style={styles.viewCheckBox}>
-                                <Checkbox />
+                                <Checkbox status={isChecked[value.name] ? 'checked' : 'unchecked'} onPress={()=>{handleCheckboxPressed(value.name)}} color="#2e8b57" />
                             </View>
                         </Card.Content>
                     </Card>
@@ -108,13 +121,11 @@ const styles = StyleSheet.create({
         // height:'100%',
         paddingBottom:'30%',
         // backgroundColor:'#ffff'
-        
-
     },
     cardStyle:{
         height:'15%',
         width:'95%',
-        color:'#ffffff',
+        backgroundColor:'#ffffff',
         marginBottom:10,
        
     },
