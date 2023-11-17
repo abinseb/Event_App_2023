@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet,Text,Image ,ScrollView} from "react-native";
 import { Card,Checkbox } from "react-native-paper";
 
+
 const NotVerifiedToVerify=()=>{
 
     const listOfStudent =[
@@ -43,6 +44,11 @@ const NotVerifiedToVerify=()=>{
         },
     ];
 
+    // animations
+
+
+
+
     const [isChecked , setIsChecked ] = useState(listOfStudent.map(()=>false));
     const handleCheckboxPressed=(id)=>{
         const newCheckedState = [isChecked];
@@ -65,7 +71,7 @@ const NotVerifiedToVerify=()=>{
                 {/* cards are inside the scroll view*/}
                 <ScrollView contentContainerStyle={styles.cardView}  >
                 {listOfStudent.map((value,index)=>(
-
+                    
                     <Card style={styles.cardStyle} key={index}>
                         <Card.Content style={styles.cardContentStyle}>
                             <Image style={styles.imageStyle} source={require('../../../images/user2.png')}></Image>
@@ -80,6 +86,7 @@ const NotVerifiedToVerify=()=>{
                             </View>
                         </Card.Content>
                     </Card>
+                    
                     ))}
                     </ScrollView>
             </View>

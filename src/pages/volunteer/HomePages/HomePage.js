@@ -41,7 +41,7 @@ const handleNavigation=()=>{
             {event.map((eventName,index)=>(
                <View key={index} style={styles.cardContainer}>
                   <TouchableOpacity onPress={handleNavigation}>
-                     <Card key={index} style={[styles.cardStyle ,{width:cardWidth -10 , height:cardWidth+40}]}>
+                     <Card key={index} style={[styles.cardStyle ,{width:cardWidth -10 , height:cardWidth+10}]}>
                         <Card.Content >
                            <Card.Cover style={styles.eventImage} source={require('./../../../images/google.jpeg')} />
                         
@@ -121,17 +121,15 @@ cardContainer: {
  },
  cardStyle:{
    alignItems:'center',
-   height:186,
-   width:157,
    margin:10,
    flexShrink:0,
-   borderRadius:45,
+   borderRadius:35,
    backgroundColor:'#fff',
    
  },
  eventImage:{
-   height:130,
-   width:130,
+   height:100,
+   width:100,
    margin:10
  },
  eventNameView:{
