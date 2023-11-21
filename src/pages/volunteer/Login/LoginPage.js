@@ -1,17 +1,54 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView ,ToastAndroid} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-paper";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { connect } from "react-redux";
+import { useDispatch } from 'react-redux';
+import { loginUser ,loginSuccess } from "../../../redux/Actions";
+
+// connection
+import { Check_Connection } from "../../../API_Communication/Check_connection";
 const Login = ({ navigation }) => {
 
+// render network status
+    useEffect(()=>{
+        NetworkConnection();
+    },[])
+
+    // check network status
+    const NetworkConnection=async()=>{
+        const network = await Check_Connection();
+       console.log("nnnn",network);
+       if(network === true){
+        // alert('You are Offline , Please Connect')
+        showToastNotification();
+       }
+    }
+
+    // show toast notification
+    function showToastNotification(){
+        ToastAndroid.show("You are Offline",ToastAndroid.SHORT);
+    }
+    // authenticate login
     const authenticateEntry = () => {
+       
+        // const user ={userName};
+        console.log('username',userName)
+        // loginUser(user);
+        dispatch(loginSuccess(userName));
         navigation.navigate('home');
     }
 
+    // usedispatch for state updating
+    const dispatch = useDispatch();
+
     // State variable to hold the password 
     const [password, setPassword] = useState('');
+
+    // state variable to hold the username
+    const [userName , setUserName] = useState('');
 
     // State variable to track password visibility 
     const [showPassword, setShowPassword] = useState(false);
@@ -34,8 +71,13 @@ const Login = ({ navigation }) => {
                     <Text style={styles.TxtInput}>User Name:</Text>
                     <TextInput
                         style={styles.userNameInput}
+                        value={userName}
                         placeholder="Email"
                         placeholderTextColor='#aaa'
+                        onChangeText={(value)=>{
+                            setUserName(value);
+                            console.log(`User Name changed,${value}`);
+                        }}
                     />
                 </View>
                 {/* password view box */}
@@ -48,7 +90,10 @@ const Login = ({ navigation }) => {
                             //password when showPassword is false 
                             secureTextEntry={!showPassword}
                             value={password}
-                            onChangeText={setPassword}
+                            onChangeText={(value)=>{
+                                setPassword(value);
+                                console.log(`password,${password}`);
+                            }}
                             style={styles.userPassword}
                             placeholder="Password"
                             placeholderTextColor="#aaa"
@@ -81,9 +126,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#012E41',
         flex: 1,
         justifyContent: 'space-between',
-
-
-    },
+   },
 
 
     imageView: {

@@ -16,6 +16,7 @@ import SingleUserVerification from "../pages/volunteer/Verification/SingleUserVe
 import VerifyTopTabNavigation from "./TopTabNavigation";
 import Input_data from "../pages/volunteer/Verification/Input_data";
 import Login from "../pages/volunteer/Login/LoginPage";
+import VolunteerProfile from "../pages/volunteer/Profile/Profile_v";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +37,7 @@ export default function MyStack(){
                 {/* top tab navigation */}
                 <Stack.Screen name="TopTab" component={VerifyTopTabNavigation} />
                 <Stack.Screen name="Input Data" component={Input_data} />
-
+                <Stack.Screen name="Profile" component={VolunteerProfile} />
             </Stack.Navigator>
         </NavigationContainer>
     )

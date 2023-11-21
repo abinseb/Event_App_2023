@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, StyleSheet,Text,Image ,ScrollView} from "react-native";
+import { View, StyleSheet,Text,Image ,ScrollView , Animated} from "react-native";
 import { Card,Checkbox } from "react-native-paper";
 
 
@@ -50,15 +50,28 @@ const NotVerifiedToVerify=()=>{
 
 
     const [isChecked , setIsChecked ] = useState(listOfStudent.map(()=>false));
-    const handleCheckboxPressed=(id)=>{
-        const newCheckedState = [isChecked];
+    const handleCheckboxPressed=(id,index)=>{
+        const newCheckedState = [...isChecked];
             newCheckedState[id] = !isChecked[id];
 
         console.log(id,newCheckedState);
         setIsChecked(newCheckedState);
-
+        if(newCheckedState[id]){
+            animationToCard(index)
+        }
     };
- 
+
+const slideAnimationlist = listOfStudent.map(()=>new Animated.Value(0));
+ const animationToCard=(index)=>{
+    console.log(index);
+        Animated.timing(slideAnimationlist[index],{
+            toValue:1,
+            duration:500,
+            useNativeDriver:true,
+        }).start(()=>{
+
+        });
+ }
     
 
     return(
@@ -71,21 +84,38 @@ const NotVerifiedToVerify=()=>{
                 {/* cards are inside the scroll view*/}
                 <ScrollView contentContainerStyle={styles.cardView}  >
                 {listOfStudent.map((value,index)=>(
-                    
-                    <Card style={styles.cardStyle} key={index}>
-                        <Card.Content style={styles.cardContentStyle}>
-                            <Image style={styles.imageStyle} source={require('../../../images/user2.png')}></Image>
-                            <Text style={styles.nameText}>{value.name}</Text>
-                            <View style={styles.textView}>
-                                <Text style={styles.txt1}> {value.email}</Text>
-                                <Text style={styles.txt1}> {value.mobileNumber}</Text>
-                                <Text style={styles.workshopTxt}>Google</Text>
-                            </View>
-                            <View style={styles.viewCheckBox}>
-                                <Checkbox status={isChecked[value.name] ? 'checked' : 'unchecked'} onPress={()=>{handleCheckboxPressed(value.name)}} color="#2e8b57" />
-                            </View>
-                        </Card.Content>
-                    </Card>
+                    <Animated.View
+                    style={{
+                        transform:[
+                            {
+                                translateX:slideAnimationlist[index].interpolate({
+                                    inputRange:[0,1],
+                                    outputRange:[0,500],
+                                }),
+
+                            }
+                        ],
+                        opacity:slideAnimationlist[index].interpolate({
+                                inputRange:[0,1],
+                                outputRange:[1,0],
+                        }),
+                    }}
+                    >
+                        <Card style={styles.cardStyle} key={index}>
+                            <Card.Content style={styles.cardContentStyle}>
+                                <Image style={styles.imageStyle} source={require('../../../images/user2.png')}></Image>
+                                <Text style={styles.nameText}>{value.name}</Text>
+                                <View style={styles.textView}>
+                                    <Text style={styles.txt1}> {value.email}</Text>
+                                    <Text style={styles.txt1}> {value.mobileNumber}</Text>
+                                    <Text style={styles.workshopTxt}>Google</Text>
+                                </View>
+                                <View style={styles.viewCheckBox}>
+                                    <Checkbox status={isChecked[value.name] ? 'checked' : 'unchecked'} onPress={()=>{handleCheckboxPressed(value.name,index)}} color="#2e8b57" />
+                                </View>
+                            </Card.Content>
+                        </Card>
+                    </Animated.View>
                     
                     ))}
                     </ScrollView>
@@ -130,7 +160,7 @@ const styles = StyleSheet.create({
         // backgroundColor:'#ffff'
     },
     cardStyle:{
-        height:'15%',
+        height:110,
         width:'95%',
         backgroundColor:'#ffffff',
         marginBottom:10,

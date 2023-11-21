@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {View,Text,StyleSheet, Image,ScrollView, Dimensions,TouchableOpacity} from 'react-native';
+import {View,Text,StyleSheet, Image,ScrollView, Dimensions,TouchableOpacity,} from 'react-native';
 import { Card,Title,} from "react-native-paper";
 import {SafeAreaView} from 'react-native-safe-area-context'
-
+import { useDispatch,useSelector } from "react-redux";
+import { connect } from 'react-redux';
 
 const HomePage =({navigation})=>{
 
@@ -14,26 +15,41 @@ const [event , setEvent] = useState([]);
          "IBm",
          "Quest",
          "Techathalon",
-         "Reception"
+         "Reception",
+         "Quest",
+         
       ]
    setEvent(eventList);
    },[])
 
+//   const state = useSelector((state)=>state);
+//   const username = state.auth.user?.username;
+// const username = useSelector((state) => state.auth.user);
+const state = useSelector((state) => state);
+const username = state.auth.username;
+console.log("hhiii,",username); 
 // calculate the widthe of each card based on the 
 const screenWidth = Dimensions.get('window').width;
 const cardWidth = (screenWidth - 40) / 2;
 
+// navigation to scan
 const handleNavigation=()=>{
    navigation.navigate("bottomTab");
 }
+
+// navigation To profile
+const navigationToProfile=()=>{
+   navigation.navigate("Profile");
+}
+
    return(
     <SafeAreaView style={styles.container}>
       <View style={styles.AppBarView}>
-         <Text style={styles.nameText}> Hello, Joseph </Text>
-         <View style={styles.profileImageView}>
+         <Text style={styles.nameText}> Hello, {username} </Text>
+         <TouchableOpacity style={styles.profileImageView} onPress={navigationToProfile}>
                <Image style={styles.profileImage} source={(require('./../../../images/icon2.png'))} />
-               <Text style={styles.profileName}>Joseph T</Text>
-         </View>
+               <Text style={styles.profileName}>Vimal</Text>
+         </TouchableOpacity>
       </View>
       <View style={styles.viewCardBox}>
          <Text style={styles.eventSelectText}>Select Event</Text>
@@ -41,7 +57,7 @@ const handleNavigation=()=>{
             {event.map((eventName,index)=>(
                <View key={index} style={styles.cardContainer}>
                   <TouchableOpacity onPress={handleNavigation}>
-                     <Card key={index} style={[styles.cardStyle ,{width:cardWidth -10 , height:cardWidth+10}]}>
+                     <Card key={index} style={[styles.cardStyle ,{width:cardWidth -20 , height:cardWidth}]}>
                         <Card.Content >
                            <Card.Cover style={styles.eventImage} source={require('./../../../images/google.jpeg')} />
                         
@@ -128,8 +144,8 @@ cardContainer: {
    
  },
  eventImage:{
-   height:100,
-   width:100,
+   height:80,
+   width:80,
    margin:10
  },
  eventNameView:{
