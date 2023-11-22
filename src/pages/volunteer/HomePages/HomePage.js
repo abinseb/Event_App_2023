@@ -5,6 +5,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import { useDispatch,useSelector } from "react-redux";
 import { connect } from 'react-redux';
 
+// impoort workshop redux action
+import { worshopSelect } from "../../../redux/Actions";
+
 const HomePage =({navigation})=>{
 
 const [event , setEvent] = useState([]);
@@ -32,8 +35,11 @@ console.log("hhiii,",username);
 const screenWidth = Dimensions.get('window').width;
 const cardWidth = (screenWidth - 40) / 2;
 
+const dispatch = useDispatch();
+
 // navigation to scan
-const handleNavigation=()=>{
+const handleNavigation=(workshop)=>{
+   dispatch(worshopSelect(workshop))
    navigation.navigate("bottomTab");
 }
 
@@ -56,7 +62,7 @@ const navigationToProfile=()=>{
          <ScrollView contentContainerStyle={styles.cardView}>
             {event.map((eventName,index)=>(
                <View key={index} style={styles.cardContainer}>
-                  <TouchableOpacity onPress={handleNavigation}>
+                  <TouchableOpacity onPress={()=>{handleNavigation(eventName)}}>
                      <Card key={index} style={[styles.cardStyle ,{width:cardWidth -20 , height:cardWidth}]}>
                         <Card.Content >
                            <Card.Cover style={styles.eventImage} source={require('./../../../images/google.jpeg')} />

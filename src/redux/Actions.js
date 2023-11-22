@@ -21,11 +21,10 @@ export const loginUser =(userData)=>{
 
 
 
-
-// event details
-// export const eventSelect=(event)=>{
-//     return{
-//         type:'SET_EVENT_STRING',
-//         payload:event,
-//     };
-// };
+// workshop details
+export const worshopSelect =(workshop)=>{
+    return{
+        type:'SET_WORKSHOP_STRING',
+        payload:workshop
+    };
+}

@@ -3,8 +3,11 @@ import {Text,View,StyleSheet,TouchableOpacity} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import BarCodeScan from "../../../components/BarCodeScan";
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useSelector } from "react-redux";
 const ScanQR=({navigation})=>{
     const [scanner,setScanner]= useState(false)
+
+    const workshopName = useSelector((state)=>state.workshop.workshopName);
 
     const handleQRCodeScan=()=>{
         setScanner(true);
@@ -19,10 +22,13 @@ const ScanQR=({navigation})=>{
     return(
         <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={handleBackNavigation} style={styles.backNavigationTouchable}>
-            <View style={styles.backNavigationView}>
-                
-                    <FontAwesome5 name="less-than" size={16} color="black" /></View>
-                </TouchableOpacity>
+                <View style={styles.backNavigationView}>
+                <FontAwesome5 name="less-than" size={16} color="black" />
+                </View>
+            </TouchableOpacity>
+            <View style={styles.workshopNameView}>
+                <Text style={styles.workshopText}>{workshopName}</Text>
+            </View>
                
             {scanner ==true?
             <BarCodeScan />  //barcode scanning 
@@ -113,6 +119,18 @@ const styles = StyleSheet.create({
         position:'absolute',
         marginTop:40,
         margin:10,
+    },
+
+    workshopNameView:{
+        top:130,
+        position:'absolute',
+        alignSelf:'center',
+        alignItems:'center'
+    },
+    workshopText:{
+        fontSize:30,
+        fontWeight:'500',
+        color:'#ffffff'
     }
 
 

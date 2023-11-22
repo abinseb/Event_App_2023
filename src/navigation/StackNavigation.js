@@ -29,11 +29,10 @@ export default function MyStack(){
                 <Stack.Screen name="Login" component={Login} options={{headerShown:false}} />
                 <Stack.Screen name="home" component={HomePage} options={{headerShown:false}} />
                 {/* bottum Tab navigation for workshop */}
-                <Stack.Screen name ="bottomTab" component={BottomTabs} options={{headerShown:false}} />
+                <Stack.Screen name ="bottomTab" component={BottomTabs} options={{headerShown:false}} cache={false}/>
 
                 {/* verify the single user */}
-                <Stack.Screen name="singleUserVerify" component={SingleUserVerification} options={{headerShown:false}} />
-
+                <Stack.Screen name="singleUserVerify" component={SingleUserVerification} options={{headerShown:false}}  />
                 {/* top tab navigation */}
                 <Stack.Screen name="TopTab" component={VerifyTopTabNavigation} />
                 <Stack.Screen name="Input Data" component={Input_data} />

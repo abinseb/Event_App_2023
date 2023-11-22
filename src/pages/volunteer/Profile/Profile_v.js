@@ -18,7 +18,7 @@ const VolunteerProfile=()=>{
                 <List.Item 
                     title="Profile"
                     titleStyle={{ color: '#ffff' }}
-                    left={()=><List.Icon icon="account" color="#fff"  size={20}/>}
+                    left={()=><List.Icon icon="account" color="#fff"  size={40}/>}
                     color="#fff"
                     style={styles.listItem}
                     onPress={()=>{
@@ -29,7 +29,7 @@ const VolunteerProfile=()=>{
                 <List.Item 
                     title="Change Password"
                     titleStyle={{ color: '#ffff' }}
-                    left={()=><List.Icon icon="key" color="#ffffff" />}
+                    left={()=><List.Icon icon="key" color="#ffffff" size={40} />}
                     color="#fff"
                     style={styles.listItem}
                     onPress={()=>{
@@ -46,7 +46,7 @@ const VolunteerProfile=()=>{
                     style={{
                         backgroundColor:'#012E41'
                     }}
-                    size={35} />
+                    size={40} />
                     }
                     color="#fff"
                     style={styles.listItem}
@@ -100,6 +100,8 @@ const styles = StyleSheet.create({
         color:'#ffffff',
         marginVertical:5,
         marginLeft:10,
+        borderBottomWidth:1,
+        borderBottomColor:'#fff'
         
     }
 
