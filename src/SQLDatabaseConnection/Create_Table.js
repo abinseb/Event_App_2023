@@ -5,7 +5,7 @@ const db = openDatabase('Event.db');
 export const  Create_Event_Data_Table=()=>{
     db.transaction(tx=>{
         tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS event_table (id INTEGER PRIMARY KEY ,name TEXT,img BLOB);',
+            'CREATE TABLE IF NOT EXISTS event_table (id TEXT PRIMARY KEY ,title TEXT,description TEXT,host TEXT,date TEXT,venu TEXT,img BLOB);',
             [],
             ()=>console.log('Event table created'),
             error => console.error('Error event :',error)
@@ -17,7 +17,7 @@ export const  Create_Event_Data_Table=()=>{
 export const Create_Workshops_Table=()=>{
     db.transaction(tx=>{
         tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS workshop_table (id INTEGER PRIMARY KEY ,workshopName TEXT,start TEXT,end TEXT,workshopIcon BLOB);',
+            'CREATE TABLE IF NOT EXISTS workshop_table (id TEXT PRIMARY KEY ,title TEXT,description TEXT,venu TEXT,date TEXT,event TEXT,icon LONGTEXT);',
             [],
             ()=>console.log('Workshop table created'),
             error => console.error('Error workshop',error)
@@ -27,10 +27,10 @@ export const Create_Workshops_Table=()=>{
 
 
 // create user table dynamicaly
-export const Create_user_table=(workshoplist,verificationlist)=>{
+export const Create_user_table=(workshoplist)=>{
     db.transaction(tx=>{
         tx.executeSql(
-            `CREATE TABLE IF NOT EXISTS user_table(id PRIMARY KEY , name TEXT,mobileNumber TEXT , email TEXT ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
+            `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT , email TEXT ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
             [],
             ()=>console.log("created user table "),
             (error)=> console.log(error),

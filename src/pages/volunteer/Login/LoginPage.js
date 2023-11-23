@@ -10,13 +10,21 @@ import { loginUser ,loginSuccess } from "../../../redux/Actions";
 
 // connection
 import { Check_Connection } from "../../../API_Communication/Check_connection";
-const Login = ({ navigation }) => {
+import { eventDataFetch } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 
+const Login = ({ navigation }) => {
+const [event , setEvent]= useState('');
 // render network status
     useEffect(()=>{
         NetworkConnection();
+        EventData();
     },[])
 
+const EventData=async()=>{
+ const eventName= await eventDataFetch();
+  await console.log("eventname",eventName.title);
+  setEvent(eventName.title);
+}
     // check network status
     const NetworkConnection=async()=>{
         const network = await Check_Connection();
@@ -64,7 +72,9 @@ const Login = ({ navigation }) => {
             {/* image view container */}
             <View style={styles.imageView}>
                 <Image style={styles.imageStyle} source={require('../../../images/ict.png')} />
+                <Text style={{fontSize:25,color:'#fff'}}>{event}</Text>
             </View>
+            
             <View style={styles.loginBox}>
                 {/* username view */}
                 <View style={styles.authDataInputUsername}>
