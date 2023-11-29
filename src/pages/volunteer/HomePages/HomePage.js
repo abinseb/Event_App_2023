@@ -5,29 +5,66 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import { useDispatch,useSelector } from "react-redux";
 import { connect } from 'react-redux';
 
+
 // impoort workshop redux action
 import { worshopSelect } from "../../../redux/Actions";
+import { workshopDataFetch } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 
 const HomePage =({navigation})=>{
 
 const [event , setEvent] = useState([]);
 // useEffect for fetching all events list in the screen
    useEffect(()=>{
-      const eventList =[
-         "Google",
-         "IBm",
-         "Quest",
-         "Techathalon",
-         "Reception",
-         "Quest",
-         
-      ]
-   setEvent(eventList);
+     workshopData();
+   
    },[])
 
-//   const state = useSelector((state)=>state);
-//   const username = state.auth.user?.username;
-// const username = useSelector((state) => state.auth.user);
+   const workshopData = async () => {
+      try {
+          const workshop = await workshopDataFetch();
+         //  console.log("Workshop title:", workshop);
+          workshop.forEach( element => {
+            element.title = capitalizeWord(element.title);
+            element.icon =baseToUrI(element.icon);
+           
+             
+          });
+          console.log("icon daataaa",workshop.icon);
+          setEvent(workshop);
+      } catch (error) {
+          console.error("Error fetching workshop data:", error);
+      }
+  };
+
+  
+//  const App = () => {
+//   const encodedBase64 =
+//   'iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==';
+
+// return (
+//   <View style={styles.container}>
+//     <Image
+//       style={styles.image}
+//       source={{uri: `data:image/png;base64,${encodedBase64}`}}
+//     />
+//   </View>
+// );
+// };
+
+  function capitalizeWord(word) {
+   // Check if the input is a valid string
+   if (typeof word !== 'string') {
+     return 'Invalid input';
+   }
+ 
+   // Capitalize the first letter and concatenate with the rest of the word
+   return word.charAt(0).toUpperCase() + word.slice(1);
+ }
+  
+const baseToUrI=(data)=>{
+   return `data:image/png;base64,${data}`;
+}
+
 const state = useSelector((state) => state);
 const username = state.auth.username;
 console.log("hhiii,",username); 
@@ -60,16 +97,15 @@ const navigationToProfile=()=>{
       <View style={styles.viewCardBox}>
          <Text style={styles.eventSelectText}>Select Event</Text>
          <ScrollView contentContainerStyle={styles.cardView}>
-            {event.map((eventName,index)=>(
+            {event.map((workshop,index)=>(
                <View key={index} style={styles.cardContainer}>
-                  <TouchableOpacity onPress={()=>{handleNavigation(eventName)}}>
+                  <TouchableOpacity onPress={()=>{handleNavigation(workshop.title)}}>
                      <Card key={index} style={[styles.cardStyle ,{width:cardWidth -20 , height:cardWidth}]}>
-                        <Card.Content >
-                           <Card.Cover style={styles.eventImage} source={require('./../../../images/google.jpeg')} />
-                        
+                           <Card.Content >
+                          <Image style={styles.eventImage} source={{uri:''}} />
                         </Card.Content>
                         <Card.Content style={styles.eventNameView}> 
-                           <Title style={{ fontWeight:'300', fontSize: eventName.length > 6 ? 16 : 16 ,letterSpacing:0.32 , paddingBottom:10}} numberOfLines ={2} ellipsizeMode="tail">{eventName}</Title> 
+                           <Title style={{ fontWeight:'300', fontSize: workshop.title.length > 6 ? 16 : 16 ,letterSpacing:0.32 , paddingBottom:10}} numberOfLines ={2} ellipsizeMode="tail">{workshop.title}</Title> 
                         </Card.Content>
                      </Card>
                   </TouchableOpacity>

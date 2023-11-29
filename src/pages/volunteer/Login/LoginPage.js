@@ -7,10 +7,11 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { connect } from "react-redux";
 import { useDispatch } from 'react-redux';
 import { loginUser ,loginSuccess } from "../../../redux/Actions";
-
+import {Data_for_Update_UserTable} from '../../../API_Communication/Load_data'
 // connection
 import { Check_Connection } from "../../../API_Communication/Check_connection";
-import { eventDataFetch } from "../../../SQLDatabaseConnection/FetchDataFromTable";
+import { eventDataFetch, user_Table_data } from "../../../SQLDatabaseConnection/FetchDataFromTable";
+
 
 const Login = ({ navigation }) => {
 const [event , setEvent]= useState('');
@@ -18,7 +19,11 @@ const [event , setEvent]= useState('');
     useEffect(()=>{
         NetworkConnection();
         EventData();
+       
     },[])
+
+    // update user tabel
+
 
 const EventData=async()=>{
  const eventName= await eventDataFetch();
@@ -40,13 +45,13 @@ const EventData=async()=>{
         ToastAndroid.show("You are Offline",ToastAndroid.SHORT);
     }
     // authenticate login
-    const authenticateEntry = () => {
+    const authenticateEntry =async () => {
        
         // const user ={userName};
         console.log('username',userName)
         // loginUser(user);
-        dispatch(loginSuccess(userName));
-        navigation.navigate('home');
+       await dispatch(loginSuccess(userName));
+       await navigation.navigate('home');
     }
 
     // usedispatch for state updating
@@ -65,6 +70,12 @@ const EventData=async()=>{
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
+
+//    user table
+const usrtbl=()=>{
+    user_Table_data();
+      //Data_for_Update_UserTable();
+}
 
     return (
         <KeyboardAwareScrollView contentContainerStyle={styles.container}>

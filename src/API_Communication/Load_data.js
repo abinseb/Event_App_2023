@@ -1,6 +1,8 @@
 import axios from "axios";
 import { URL_Connection, eventID } from "../connection/Url_connection";
-import { insertWorkshopTable } from "../SQLDatabaseConnection/Insert_Table";
+import { insertWorkshopTable, insert_To_UserTable } from "../SQLDatabaseConnection/Insert_Table";
+import { Create_user_table } from "../SQLDatabaseConnection/Create_Table";
+import { update_user_Table } from "../SQLDatabaseConnection/Update_Table";
 
 // fetch url 
 const url = URL_Connection();
@@ -26,7 +28,11 @@ export const workshop_data_load=async()=>{
     const response = await axios.get(`${url}/workshop/get/${eventId}`);
     // console.log("workshop response",response.data);
     const workshop = response.data;
-    await insertWorkshopTable(workshop);
+    const workshopeName = workshop.map(item => item.title);
+    console.log("workshopne name load",workshopeName);
+    // await insertWorkshopTable(workshop);
+    // await Create_user_table(workshopeName);
+    return await workshop;
   }
   catch(error){
     console.log('Error :',error);
@@ -34,15 +40,37 @@ export const workshop_data_load=async()=>{
   }
 }
 
+// workshop name and userdata
+export const Data_for_Update_UserTable=async()=>{
+  try{
+    const workshopData = await workshop_data_load();
+    const worksop =await workshopData.map(item => item.title);
+    console.log("hii  hiii",worksop);
+
+    const userData = await user_data_load();
+    console.log("userdataforUpdation",userData);
+
+    // update user Table
+     await update_user_Table(userData,worksop);
+
+  }
+  catch(error){
+    console.log(error);
+  }
+}
 // load user data
 export const user_data_load=async()=>{
-      await axios.get(`${url}/participants/get/${eventId}`)
-          .then((res) => {
-            console.log("Response data:", res.data[0]);
-            
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+   try{
+    const response = await axios.get(`${url}/participants/get/${eventId}`);
+    const userData = response.data;
+    // await insert_To_UserTable(userData);
+    return await userData;
+    
+   }
+   catch(error){
+      console.log('Error :',error);
+   } 
 }
+
+ 
 

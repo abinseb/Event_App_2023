@@ -1,21 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {View , Text , StyleSheet} from 'react-native';
 import{BarCodeScanner} from 'expo-barcode-scanner';
 import { useNavigation } from "@react-navigation/native";
 const BarCodeScan =()=>{
     const [hasPermission,setPermission] = useState(null);
     const [scanned,setScanned] = useState(false);
-    const [qrData , setQrData] = useState('');
+    // const [qrData , setQrData] = useState('');
+    const qrdata = useRef('');
     const navigation = useNavigation();
 
     const handleBarCodeScanned=({type,data})=>{
         setScanned(true);
-        setQrData(data);
-        alert("scanned");
+        // setQrData(data);
+        qrdata.current = data;
+        alert("scanned",data);
         navigationToVerification();
     }
   const navigationToVerification=()=>{
-        navigation.navigate("singleUserVerify");
+        navigation.navigate("singleUserVerify" , {qrdata:qrdata.current} );
     }
 
     useEffect(()=>{

@@ -1,4 +1,5 @@
 import { openDatabase } from "expo-sqlite";
+import { workshop_data_load } from "../API_Communication/Load_data";
 const db = openDatabase('Event.db');
 
 // create event_table
@@ -27,10 +28,13 @@ export const Create_Workshops_Table=()=>{
 
 
 // create user table dynamicaly
-export const Create_user_table=(workshoplist)=>{
-    db.transaction(tx=>{
+export const Create_user_table=async()=>{
+    const workshopData = await workshop_data_load();
+    const workshoplist = await workshopData.map(item => item.title);
+    console.log("workshopname",workshoplist)
+   await db.transaction(tx=>{
         tx.executeSql(
-            `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT , email TEXT ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
+            `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT , email TEXT, ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
             [],
             ()=>console.log("created user table "),
             (error)=> console.log(error),

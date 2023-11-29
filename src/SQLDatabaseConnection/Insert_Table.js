@@ -1,5 +1,5 @@
 import { openDatabase } from "expo-sqlite";
-import { event_Data_Load, workshop_data_load } from "../API_Communication/Load_data";
+import { event_Data_Load, user_data_load, workshop_data_load } from "../API_Communication/Load_data";
 const db = openDatabase('Event.db');
 
 // insert data into event table
@@ -28,10 +28,12 @@ export const insertEventTable = async () => {
     }
 };
 
-export const insertWorkshopTable=async(workshopData)=>{
+export const insertWorkshopTable=async()=>{
     try{
+
+        const workshopData = await workshop_data_load();
        
-            db.transaction((tx)=>{
+          await db.transaction((tx)=>{
                 workshopData.forEach((element) => {
                     console.log("kkkk",element.title ,element._id,
                     element.title,
@@ -65,4 +67,34 @@ export const insertWorkshopTable=async(workshopData)=>{
    catch(error){
     console.log("error loading workshop data",error);
    }
+}
+
+
+// insert to user table
+export const insert_To_UserTable=async()=>{
+
+    try{
+        const userData = await user_data_load();
+
+       await db.transaction((tx)=>{
+            userData.forEach((user)=>{
+               tx.executeSql(
+                'INSERT INTO user_table (id,name,mobile,email)VALUES(?,?,?,?);',
+                [
+                    user._id,
+                    user.name,
+                    user.mobile,
+                    user.email,
+                ],
+                ()=> console.log("insert partily to userTable"),
+                (error)=> console.error("error in inserting",error)
+               )
+                
+            })
+        })
+
+    }
+    catch(err){
+        console.log(err);
+    }
 }

@@ -1,11 +1,14 @@
 import React from "react";
 import { View, StyleSheet,Image,Text,TouchableOpacity } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons,Ionicons,FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons,Ionicons,FontAwesome5,AntDesign } from '@expo/vector-icons';
 import { Button } from "react-native-paper";
-const SingleUserVerification = ({navigation}) => {
+const SingleUserVerification = ({route,navigation}) => {
+  // params passing during navigation
+  const {qrdata} = route.params;
   const navigationToScan=()=>{
     navigation.navigate("ScanQRCode");
+    
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -26,13 +29,18 @@ const SingleUserVerification = ({navigation}) => {
         </View>
         <View style={styles.profileBox}>
             <View style={styles.nameTextTopView}>
-                <Text style={styles.nameText}>Joseph Thomas</Text>
+                <Text style={styles.nameText}>Kuttishankaran </Text>
                 <Text style={styles.institusionText}>College of Engineering Vadakara</Text>
             </View> 
             <View style={styles.tittleDetails}>
                 <Text style={styles.TittleText}>Participant Details</Text>
             </View>
             <View style={styles.otherDetailsView}>
+                <View style={styles.iconDataView}>
+                <AntDesign name="idcard" size={20} color="black" />
+                      <Text style={styles.dataStyle}>{qrdata}</Text>
+                      
+                  </View>
                 <View style={styles.iconDataView}>
                     <MaterialCommunityIcons name="email-outline" size={20} color="black" />
                     <Text style={styles.dataStyle}>mailid123@gmail.com</Text>

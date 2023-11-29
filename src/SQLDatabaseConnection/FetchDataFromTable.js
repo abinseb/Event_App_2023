@@ -33,3 +33,46 @@ export const eventDataFetch = async () => {
         }
     });
   };
+
+//   workshop data fetch
+export const workshopDataFetch = async () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(
+            (tx) => {
+                tx.executeSql(
+                    'SELECT id,title,icon FROM workshop_table ;',
+                    [],
+                    (_, { rows }) => {
+                        const workshopData = rows._array;
+                        if (workshopData.length > 0) {
+                            console.log("wwww", workshopData);
+                            resolve(workshopData); // Resolve the promise with the workshop data
+                        } else {
+                            resolve([]); // Resolve with an empty array if no workshops are found
+                        }
+                    }
+                );
+            },
+            (error) => {
+                console.error("Error in database transaction:", error);
+                reject(error); // Reject the promise in case of an error
+            }
+        );
+    });
+};
+
+
+
+export const user_Table_data=()=>{
+    db.transaction((tx)=>{
+        tx.executeSql(
+            'SELECT * FROM user_table;',
+            [],
+            (_,{rows})=>{
+                const data =rows._array;
+                console.log("usertBLE DATA,", data);
+            }
+        )
+    }
+    )
+}
