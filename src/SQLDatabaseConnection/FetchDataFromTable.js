@@ -62,7 +62,7 @@ export const workshopDataFetch = async () => {
 };
 
 
-
+// usertable data
 export const user_Table_data=()=>{
     db.transaction((tx)=>{
         tx.executeSql(
@@ -76,3 +76,65 @@ export const user_Table_data=()=>{
     }
     )
 }
+
+// fetch event id
+export const userDetailsBasedOnIDFromTable = (userId) => {
+    return new Promise((resolve, reject) => {
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT * FROM user_table WHERE id = ?;',
+            [userId],
+            (_, { rows }) => {
+              if (rows.length > 0) {
+                const data = rows._array
+                console.log("#######dtaa",data);
+                resolve(data);
+               
+              } else {
+                console.log("empty");
+                resolve(null); // Resolve with null if no rows are found
+              }
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if there's a SQL error
+            }
+          );
+        });
+      } catch (err) {
+        console.error(err);
+        reject(err); // Reject with the error if there's an exception
+      }
+    });
+  };
+  
+// Fetch data from group table
+export const group_dataFrom_groupTable = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT * FROM group_table;',
+            [],
+            (_, { rows }) => {
+              if (rows.length > 0) {
+                const data = rows._array
+                console.log("#######dtaa",data);
+                resolve(data);
+               
+              } else {
+                console.log("empty");
+                resolve(null); // Resolve with null if no rows are found
+              }
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if there's a SQL error
+            }
+          );
+        });
+      } catch (err) {
+        console.error(err);
+        reject(err); // Reject with the error if there's an exception
+      }
+    });
+  };

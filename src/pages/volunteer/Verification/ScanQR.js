@@ -1,16 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {Text,View,StyleSheet,TouchableOpacity} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import BarCodeScan from "../../../components/BarCodeScan";
+// import BarCodeScan from "../../../components/BarCodeScan";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useSelector } from "react-redux";
 const ScanQR=({navigation})=>{
-    const [scanner,setScanner]= useState(false)
+    const [scanner,setScanner]= useState(false);
 
     const workshopName = useSelector((state)=>state.workshop.workshopName);
+    const [capitalWorkshop,setCapitalWorkshop] = useState('');
+    useEffect(()=>{
+        setCapitalWorkshop(Capitalise(workshopName));
+    },[])
 
+    // workshop name capitalise to normal
+function Capitalise(word) {
+    return word.toUpperCase();
+  }
+
+  
     const handleQRCodeScan=()=>{
         setScanner(true);
+        navigation.navigate("qrscanner");
     }
 
     const handleBackNavigation=()=>{
@@ -27,12 +38,12 @@ const ScanQR=({navigation})=>{
                 </View>
             </TouchableOpacity>
             <View style={styles.workshopNameView}>
-                <Text style={styles.workshopText}>{workshopName}</Text>
+                <Text style={styles.workshopText}>{capitalWorkshop}</Text>
             </View>
                
-            {scanner ==true?
-            <BarCodeScan />  //barcode scanning 
-             :
+            {/* {scanner ==true? */}
+            {/* <BarCodeScan />  //barcode scanning 
+             : */}
             <View style={styles.buttonViewBox}>
                 <TouchableOpacity onPress={handleQRCodeScan}>
                     <View style={styles.innerButton}>
@@ -40,7 +51,7 @@ const ScanQR=({navigation})=>{
                     </View>
                 </TouchableOpacity>
             </View> 
-            }
+            {/* } */}
             <View style={styles.textView}>
                 <Text style={styles.txt1}>If QR won't Work?</Text>
                 <TouchableOpacity onPress={navigationToVerify}>

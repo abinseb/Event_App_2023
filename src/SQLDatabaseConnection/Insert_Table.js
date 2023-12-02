@@ -1,5 +1,5 @@
 import { openDatabase } from "expo-sqlite";
-import { event_Data_Load, user_data_load, workshop_data_load } from "../API_Communication/Load_data";
+import { Group_list_load, event_Data_Load, user_data_load, workshop_data_load } from "../API_Communication/Load_data";
 const db = openDatabase('Event.db');
 
 // insert data into event table
@@ -79,11 +79,12 @@ export const insert_To_UserTable=async()=>{
        await db.transaction((tx)=>{
             userData.forEach((user)=>{
                tx.executeSql(
-                'INSERT INTO user_table (id,name,mobile,email)VALUES(?,?,?,?);',
+                'INSERT INTO user_table (id,name,mobile,group,email)VALUES(?,?,?,?,?);',
                 [
                     user._id,
                     user.name,
                     user.mobile,
+                    user.group,
                     user.email,
                 ],
                 ()=> console.log("insert partily to userTable"),
@@ -96,5 +97,47 @@ export const insert_To_UserTable=async()=>{
     }
     catch(err){
         console.log(err);
+    }
+}
+
+// offline data insert
+
+export const offline_dataInsert=(userid,workshop)=>{
+    try{
+        db.transaction((tx)=>{
+            tx.executeSql(
+                'INSERT INTO offline_table (id ,workshopName) VALUES (?,?);',
+                [userid,workshop],
+                ()=>console.log("Insert id and workshop offlinetble"),
+                (error)=> console.error("Error in insertion",error)
+            )
+        })
+    }
+    catch(error){
+    console.log("Error in inserting offline ",error)
+    }
+}
+
+// insert data into group table
+export const insert_group_table=async()=>{
+    try{
+        const groupData = await Group_list_load();
+
+       await db.transaction((tx)=>{
+           groupData.forEach((group)=>{
+            tx.executeSql(
+                'INSERT INTO group_table (id,name) VALUES (?,?);',
+                [
+                    group._id,
+                    group.name
+                ],
+                ()=>console.log("insert data to group table"),
+                (err)=> console.log("error in inserting",err)
+            )
+           })
+        })
+    }
+    catch(err){
+        console.log("Error in inserting",err);
     }
 }

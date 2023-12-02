@@ -36,21 +36,8 @@ const [event , setEvent] = useState([]);
       }
   };
 
-  
-//  const App = () => {
-//   const encodedBase64 =
-//   'iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==';
 
-// return (
-//   <View style={styles.container}>
-//     <Image
-//       style={styles.image}
-//       source={{uri: `data:image/png;base64,${encodedBase64}`}}
-//     />
-//   </View>
-// );
-// };
-
+// capitalise the first letter
   function capitalizeWord(word) {
    // Check if the input is a valid string
    if (typeof word !== 'string') {
@@ -75,10 +62,16 @@ const cardWidth = (screenWidth - 40) / 2;
 const dispatch = useDispatch();
 
 // navigation to scan
-const handleNavigation=(workshop)=>{
-   dispatch(worshopSelect(workshop))
-   navigation.navigate("bottomTab");
+const handleNavigation=async(workshop)=>{
+   const workshopName = await reverseCapitalise(workshop)
+   await dispatch(worshopSelect(workshopName))
+  await navigation.navigate("bottomTab");
 }
+
+// workshop name capitalise to normal
+function reverseCapitalise(word) {
+   return word.charAt(0).toLowerCase() + word.slice(1);
+ }
 
 // navigation To profile
 const navigationToProfile=()=>{

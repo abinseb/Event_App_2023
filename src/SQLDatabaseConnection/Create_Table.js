@@ -34,7 +34,7 @@ export const Create_user_table=async()=>{
     console.log("workshopname",workshoplist)
    await db.transaction(tx=>{
         tx.executeSql(
-            `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT , email TEXT, ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
+            `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT ,group TEXT, email TEXT, ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
             [],
             ()=>console.log("created user table "),
             (error)=> console.log(error),
@@ -64,11 +64,23 @@ export const tableList=()=>{
 export const create_Offline_table=()=>{
     db.transaction(tx=>{
         tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS offline_table(id INTEGER,workshopName TEXT);',
+            'CREATE TABLE IF NOT EXISTS offline_table(id TEXT,workshopName TEXT);',
             [],
             ()=>console.log("offline_table created"),
             (error)=>console.log(error),
 
+        );
+    });
+}
+
+// creating table for storing groups
+export const create__group_table=()=>{
+    db.transaction((tx)=>{
+        tx.executeSql(
+            'CREATE TABLE IF NOT EXISTS group_table (id TEXT PRIMARY KEY , name TEXT);',
+            [],
+            ()=>console.log('group table created'),
+            (error)=> console.log("Error in creating group",error),
         );
     });
 }

@@ -1,14 +1,87 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet,Image,Text,TouchableOpacity } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons,Ionicons,FontAwesome5,AntDesign } from '@expo/vector-icons';
 import { Button } from "react-native-paper";
+import { user_data_based_on_id } from "../../../API_Communication/Load_data";
+import { useSelector } from "react-redux";
+import { userDetailsBasedOnIDFromTable } from "../../../SQLDatabaseConnection/FetchDataFromTable";
+import { userVerification } from "../../../API_Communication/Verification";
+import { userVerification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
 const SingleUserVerification = ({route,navigation}) => {
   // params passing during navigation
   const {qrdata} = route.params;
+  // workshopname fetch from redux
+  const workshopname = useSelector((state)=>state.workshop.workshopName);
+  // userdata store in a useState array
+  const [user,setUser] = useState([]);
+
+  // back navigation to scan
   const navigationToScan=()=>{
     navigation.navigate("ScanQRCode");
+  }
+
+  // workshopname
+  const[worshopNamecapital,setWorkshopNamecapital] = useState('');
+
+  const workshopValue = useRef('');
+
+  useEffect(()=>{
+    setWorkshopNamecapital(Capitalise(workshopname));
+    userDataFetch();
+  },[])
+  // to capitalise
+  function Capitalise(word) {
+    return word.toUpperCase();
+  }
+  const userDataFetch=async()=>{
+    try{
+      const userData = await user_data_based_on_id(qrdata);
+    const singleUserData = await userData.data[0];
     
+    workshopValue.current= singleUserData.workshops[workshopname];
+    console.log("kitttipoye",workshopValue.current)
+      if(singleUserData.workshops[workshopname] != 0){
+        setUser(singleUserData);
+      }
+      else{
+        alert("Not Registered");
+        navigationToScan();
+      }
+      
+ 
+    }
+    catch(error){
+      alert("offf");
+      const offlinedata = await userDetailsBasedOnIDFromTable(qrdata);
+      console.log("offlinedata###########",offlinedata[0][workshopname]);
+      
+    if(Number(offlinedata[0][workshopname]) != 0){
+      workshopValue.current= (Number(offlinedata[0][workshopname]));
+      setUser(offlinedata[0]);
+    
+      }
+      else{
+        alert("User Not Registered");
+      }
+    }
+    
+  }
+
+  // verification of user based on the workshop
+  const handleVerification=async()=>{
+      const verification = await userVerification(qrdata,workshopname);
+     await console.log("kkkk",verification);
+      if(verification === true){
+        alert("Verification Success");
+        navigationToScan();
+      }
+      else{
+        // alert("Failed");
+        userVerification_Offline(qrdata,workshopname);
+        navigationToScan();
+        
+      }
   }
   return (
     <SafeAreaView style={styles.container}>
@@ -27,11 +100,15 @@ const SingleUserVerification = ({route,navigation}) => {
         <View style={styles.innerBox2}>
             {/* Content for innerBox2 */}
         </View>
+        
         <View style={styles.profileBox}>
             <View style={styles.nameTextTopView}>
-                <Text style={styles.nameText}>Kuttishankaran </Text>
+                <Text style={styles.nameText}>{user.name} </Text>
                 <Text style={styles.institusionText}>College of Engineering Vadakara</Text>
             </View> 
+           <View style={{alignSelf:'center',alignItems:'center',paddingTop:20}}>
+           <Text style={styles.workshopNameStyle}>{worshopNamecapital}</Text>
+           </View>
             <View style={styles.tittleDetails}>
                 <Text style={styles.TittleText}>Participant Details</Text>
             </View>
@@ -43,20 +120,29 @@ const SingleUserVerification = ({route,navigation}) => {
                   </View>
                 <View style={styles.iconDataView}>
                     <MaterialCommunityIcons name="email-outline" size={20} color="black" />
-                    <Text style={styles.dataStyle}>mailid123@gmail.com</Text>
+                    <Text style={styles.dataStyle}>{user.email}</Text>
                 </View>
                 <View style={styles.iconDataView}>
                 <Ionicons name="call-outline" size={20} color="black" />
-                    <Text style={styles.dataStyle}>9074515643</Text>
+                    <Text style={styles.dataStyle}>{user.mobile}</Text>
                 </View>
                 
             </View>
+            {workshopValue.current === 2?
+                 <View style={styles.buttonView}>
+                  <Text style={{color:'#228b22',alignSelf:'center',fontSize:20}}>Verified</Text>
+                  <Button mode="contained" onPress={navigationToScan} style={styles.customButtonBackToHome}>Back To Home</Button>
+
+                  </View>
+            :
             <View style={styles.buttonView}>
-                <Button mode="contained" style={styles.customButton}>Verify</Button>
+                <Button mode="contained" onPress={handleVerification} style={styles.customButton}>Verify</Button>
 
             </View>
-          
-        </View>
+         
+            }
+
+        </View> 
         <View style={styles.imageView}>
             <Image style={styles.imageStyle} source={require('./../../../images/icon2.png')} />
         </View>
@@ -129,7 +215,7 @@ const styles = StyleSheet.create({
   },
   tittleDetails:{
     alignItems:'center',
-    paddingTop:'20%'
+    paddingTop:'5%'
   },
   
   otherDetailsView:{
@@ -177,6 +263,13 @@ const styles = StyleSheet.create({
 touchable:{
   top:0,
   position:'absolute',
-}
-  
+},
+workshopNameStyle:{
+fontWeight:'900',
+fontSize:20,
+},
+customButtonBackToHome:{
+  width:170,
+  backgroundColor:'#008000'
+},
 });

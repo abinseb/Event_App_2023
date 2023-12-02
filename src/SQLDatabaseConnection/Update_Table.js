@@ -1,5 +1,6 @@
 // update user table for updating wrkshops
 import { openDatabase } from "expo-sqlite";
+import { offline_dataInsert } from "./Insert_Table";
 const db = openDatabase('Event.db');
 
 
@@ -23,5 +24,25 @@ export const update_user_Table =(userData ,workshop )=>{
     }
     catch(error){
         console.error(error)
+    }
+}
+
+export const userVerification_Offline=(userid,workshop)=>{
+    try{
+        db.transaction((tx)=>{
+            tx.executeSql(
+                `UPDATE user_table SET ${workshop} = ? WHERE id = ? ;`,
+                ['2',userid],
+                ()=>{
+                    offline_dataInsert(userid,workshop);
+                    alert("Verified");
+                    console.log("userverified_offline");
+                    },
+                (error)=>console.log("verificationError",error)
+            )
+        })
+    }
+    catch(error){
+        console.log("Transaction error", error);
     }
 }

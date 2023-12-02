@@ -1,79 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet,Text,Image ,ScrollView , Animated} from "react-native";
 import { Card,Checkbox } from "react-native-paper";
+import { List_userbasedOn_group } from "../../../API_Communication/Load_data";
+import { useSelector } from "react-redux";
 
+const NotVerifiedToVerify=({route})=>{
 
-const NotVerifiedToVerify=()=>{
-
-    const listOfStudent =[
-        {
-            "name":"Amal Rajan",
-            "email":"amalrajappan@gmail.com",
-            'mobileNumber' :9076573863,
-        },
-        {
-            "name":"Rahul CV",
-            "email":"rahul@gmail.com",
-            'mobileNumber' :9076573863,
-        },
-        {
-            "name":"joseph T",
-            "email":"josephpk@gmail.com",
-            'mobileNumber' :9076573863,
-        },
-        {
-            "name":"Anil Rajan",
-            "email":"anilrajappan@gmail.com",
-            'mobileNumber' :9076573863,
-        },
-        {
-            "name":"Niranjan CK",
-            "email":"niranjanck@gmail.com",
-            'mobileNumber' :9076573863,
-        },
-        {
-            "name":"adrishin",
-            "email":"adrishinb@gmail.com",
-            'mobileNumber' :9076573863,
-        },
-        {
-            "name":"Vimal Prakash",
-            "email":"vimalprakash@gmail.com",
-            'mobileNumber' :9076573863,
-        },
-    ];
-
-    // animations
-
-
-
-
-    const [isChecked , setIsChecked ] = useState(listOfStudent.map(()=>false));
-    const handleCheckboxPressed=(id,index)=>{
-        const newCheckedState = [...isChecked];
-            newCheckedState[id] = !isChecked[id];
-
-        console.log(id,newCheckedState);
-        setIsChecked(newCheckedState);
-        if(newCheckedState[id]){
-            animationToCard(index)
-        }
-    };
-
-const slideAnimationlist = listOfStudent.map(()=>new Animated.Value(0));
- const animationToCard=(index)=>{
-    console.log(index);
-        Animated.timing(slideAnimationlist[index],{
-            toValue:1,
-            duration:500,
-            useNativeDriver:true,
-        }).start(()=>{
-
-        });
- }
+    // group id
+const {groupid} = route.params;
+// workshopname from redux
+const workshopname = useSelector((state)=>state.workshop.workshopName);
+  
+    // userlist
+    const [userList,setUserList] = useState([]);
+    const [isChecked, setIsChecked] = useState([]);
+    const slideAnimationlist =userList.map(() => new Animated.Value(0));
     
 
+    useEffect(()=>{
+        listOfUser_inGroup();
+        
+    },[])
+
+    const listOfUser_inGroup=async()=>{
+        const userData = await List_userbasedOn_group(groupid,workshopname);
+        console.log("list the user___________",userData);
+        setUserList(userData);
+        setIsChecked(userData.map(() => false)); 
+        
+    }
+
+    
+    const handleCheckboxPressed =async(id, index) => {
+       
+    console.log("iddd",id);
+      };
+    
+    
     return(
         <SafeAreaView style={styles.container}> 
             <View style={styles.innerBox}>
@@ -83,7 +47,7 @@ const slideAnimationlist = listOfStudent.map(()=>new Animated.Value(0));
                 
                 {/* cards are inside the scroll view*/}
                 <ScrollView contentContainerStyle={styles.cardView}  >
-                {listOfStudent.map((value,index)=>(
+                {userList.map((value,index)=>(
                     <Animated.View
                     style={{
                         transform:[
@@ -107,11 +71,11 @@ const slideAnimationlist = listOfStudent.map(()=>new Animated.Value(0));
                                 <Text style={styles.nameText}>{value.name}</Text>
                                 <View style={styles.textView}>
                                     <Text style={styles.txt1}> {value.email}</Text>
-                                    <Text style={styles.txt1}> {value.mobileNumber}</Text>
-                                    <Text style={styles.workshopTxt}>Google</Text>
+                                    <Text style={styles.txt1}> {value.mobile}</Text>
+                                    <Text style={styles.workshopTxt}>{workshopname}</Text>
                                 </View>
                                 <View style={styles.viewCheckBox}>
-                                    <Checkbox status={isChecked[value.name] ? 'checked' : 'unchecked'} onPress={()=>{handleCheckboxPressed(value.name,index)}} color="#2e8b57" />
+                                    <Checkbox status={isChecked[value.name] ? 'checked' : 'unchecked'} onPress={()=>{handleCheckboxPressed(value._id,index)}} color="#2e8b57" />
                                 </View>
                             </Card.Content>
                         </Card>

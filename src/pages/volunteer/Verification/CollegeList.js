@@ -1,84 +1,71 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {View,Text,StyleSheet} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchableDropDown from 'react-native-searchable-dropdown';
+import { Group_list_load } from '../../../API_Communication/Load_data';
+import { group_dataFrom_groupTable } from '../../../SQLDatabaseConnection/FetchDataFromTable';
 const BulkVerification =({navigation})=>{
 
-    var items = [
-        {
-          id: 1,
-          name: 'JavaScript',
-        },
-        {
-          id: 2,
-          name: 'Java',
-        },
-        {
-          id: 3,
-          name: 'Ruby',
-        },
-        {
-          id: 4,
-          name: 'React Native',
-        },
-        {
-          id: 5,
-          name: 'PHP',
-        },
-        {
-          id: 6,
-          name: 'Python',
-        },
-        {
-          id: 7,
-          name: 'Go',
-        },
-        {
-          id: 8,
-          name: 'Swift',
-        },
-      ];
-const handlePassTheSelection=()=>{
-  navigation.navigate('TopTab');
-}
+  const [items, setItems] = useState([]);
 
-    return(
-       <SafeAreaView style={styles.container}>
-          <View style={styles.TopTextView}>
-              <Text style={styles.TextStyle}>Select the Institusion from the List</Text>
-          </View>
-          {/* <View style={styles.viewSearchableDropDown}> */}
-            <SearchableDropDown
-              onTextChange={(text) => console.log(text)}
-              onItemSelect={handlePassTheSelection}
-              containerStyle={{ paddingTop: 50 }}
-              textInputStyle={{
-                  padding: 12,
-                  borderWidth: 1,
-                  borderColor: '#ccc',
-                  backgroundColor: '#FAF7F6',
-              }}
-              itemStyle={{
-                  padding: 10,
-                  marginTop: 2,
-                  backgroundColor: '#FAF9F8',
-                  borderColor: '#bbb',
-                  borderWidth: 1,
-              }}
-              itemTextStyle={{
-                  color: '#222',
-              }}
-              itemsContainerStyle={{
-                  maxHeight: '100%',
-              }}
-              items={items}
-              defaultIndex={2}
-              placeholder="Select a college"
-              resetValue={false}
-              underlineColorAndroid="transparent"
-              />
-          {/* </View> */}
-       </SafeAreaView>
+  useEffect(() => {
+    groupList_load();
+  }, []);
+
+  const groupList_load = async () => {
+    try {
+      const group = await group_dataFrom_groupTable();
+      const groupNames = group.map(item => ({ id: item.id, name: item.name }));
+      console.log("names_____", groupNames);
+      setItems(groupNames);
+    } catch (error) {
+      console.error("Error loading group list:", error);
+    }
+  };
+
+  const handlePassTheSelection = (selectedItem) => {
+    console.log("Selected college:", selectedItem.id);
+    const groupid = selectedItem.id;
+    console.log("idd",groupid);
+
+   navigation.navigate('TopTab',{groupid})
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.TopTextView}>
+        <Text style={styles.TextStyle}>Select the Institution from the List</Text>
+      </View>
+      <SearchableDropDown
+        onTextChange={(text) => console.log(text)}
+        onItemSelect={handlePassTheSelection}
+        containerStyle={{ paddingTop: 50 }}
+        textInputStyle={{
+          padding: 12,
+          borderWidth: 1,
+          borderColor: '#ccc',
+          backgroundColor: '#FAF7F6',
+        }}
+        itemStyle={{
+          padding: 10,
+          marginTop: 2,
+          backgroundColor: '#FAF9F8',
+          borderColor: '#bbb',
+          borderWidth: 1,
+        }}
+        itemTextStyle={{
+          color: '#222',
+        }}
+        itemsContainerStyle={{
+          maxHeight: '100%',
+        }}
+        items={items}
+        defaultIndex={2}
+        placeholder="Select a college"
+        resetValue={false}
+        underlineColorAndroid="transparent"
+      />
+    </SafeAreaView>
     )
 }
 
