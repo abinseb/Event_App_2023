@@ -168,3 +168,34 @@ export const group_dataFrom_groupTable = () => {
       }
     });
   };
+
+  // verified user data based on group
+  export const Verified_user_data_basedON_group = (groupid,workshopname) => {
+    return new Promise((resolve, reject) => {
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `SELECT * FROM user_table WHERE groupid = ? AND ${workshopname} = ? ;`,
+            [groupid,"2.0"],
+            (_, { rows }) => {
+              if (rows.length > 0) {
+                const data = rows._array
+                console.log("#######dtaa###",data);
+                resolve(data);
+               
+              } else {
+                console.log("empty");
+                resolve(null); // Resolve with null if no rows are found
+              }
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if there's a SQL error
+            }
+          );
+        });
+      } catch (err) {
+        console.error(err);
+        reject(err); // Reject with the error if there's an exception
+      }
+    });
+  };

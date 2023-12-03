@@ -46,3 +46,24 @@ export const userVerification_Offline=(userid,workshop)=>{
         console.log("Transaction error", error);
     }
 }
+
+// unverify
+export const unverification_Offline=(userid,workshop)=>{
+    try{
+        db.transaction((tx)=>{
+            tx.executeSql(
+                `UPDATE user_table SET ${workshop} = ? WHERE id = ? ;`,
+                ['1',userid],
+                ()=>{
+                    offline_dataInsert(userid,workshop);
+                    alert("Verified");
+                    console.log("unverified_offline");
+                    },
+                (error)=>console.log("unverificationError",error)
+            )
+        })
+    }
+    catch(error){
+        console.log("unverification_Transaction error", error);
+    }
+}

@@ -1,67 +1,77 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet, Text, Image, ScrollView, TouchableOpacity, Animated } from "react-native";
 import { Card, Checkbox, Icon } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { list_unverifiedUserData_basedOngroup } from "../../../API_Communication/Load_data";
+import { Verified_user_data_basedON_group } from "../../../SQLDatabaseConnection/FetchDataFromTable";
+import { unverify_user } from "../../../API_Communication/Verification";
+import { unverification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
 
-import { TapGestureHandler } from 'react-native-gesture-handler';
-const VerifiedToNotVerify = () => {
-
-    const listOfStudent = [
-        {
-            "name": "Amal Rajan",
-            "email": "amalrajappan@gmail.com",
-            'mobileNumber': 9076573863,
-        },
-        {
-            "name": "Rahul CV",
-            "email": "rahul@gmail.com",
-            'mobileNumber': 9076573863,
-        },
-        {
-            "name": "joseph T",
-            "email": "josephpk@gmail.com",
-            'mobileNumber': 9076573863,
-        },
-        {
-            "name": "Anil Rajan",
-            "email": "anilrajappan@gmail.com",
-            'mobileNumber': 9076573863,
-        },
-        {
-            "name": "Niranjan CK",
-            "email": "niranjanck@gmail.com",
-            'mobileNumber': 9076573863,
-        },
-        {
-            "name": "adrishin",
-            "email": "adrishinb@gmail.com",
-            'mobileNumber': 9076573863,
-        },
-        {
-            "name": "Vimal Prakash",
-            "email": "vimalprakash@gmail.com",
-            'mobileNumber': 9076573863,
-        },
-    ];
+const VerifiedToNotVerify = ({route}) => {
 
 
-    //   const translateX = useSharedValue(0);
-    // const slideAnimation = useRef(new Animated.Value(0)).current;
-    const slideAnimation = listOfStudent.map(() => new Animated.Value(0));
+    // const animationToCard = (index) => {
+    //     console.log(index);
+    //     Animated.timing(slideAnimation[index], {
+    //         toValue: 1,
+    //         duration: 500, // Adjust the duration as needed
+    //         useNativeDriver: true,
+    //     }).start(() => {
+    //         // Animation finished
+    //         // onAnimationEnd();
+    //     });
+    // }
+
+    
+ // group id
+ const { groupid,groupname } = route.params;
+ // workshopname from redux
+ const workshopname = useSelector((state) => state.workshop.workshopName);
+ const [userdata,setUserData] = useState([]);
+
+ const [refresh, setRefresh] = useState(false);
+
+useEffect(()=>{
+
+    verifiedUserData();
+},[refresh])
 
 
-    const animationToCard = (index) => {
-        console.log(index);
-        Animated.timing(slideAnimation[index], {
-            toValue: 1,
-            duration: 500, // Adjust the duration as needed
-            useNativeDriver: true,
-        }).start(() => {
-            // Animation finished
-            // onAnimationEnd();
-        });
+const verifiedUserData=async()=>{
+    try{
+        const verifiedData = await list_unverifiedUserData_basedOngroup(groupid,workshopname);
+    console.log("verified_data_______#####",verifiedData);
+    setUserData(verifiedData);
+    
+    
+    }
+    catch(err){
+        console.log("error",err);
+        const verifiedTableData = await Verified_user_data_basedON_group(groupid,workshopname);
+        console.log("verified")
+        setUserData(verifiedTableData);
     }
 
+}
+
+// unverify the user data
+const unverify_user_inGroup=async(userid)=>{
+    try{
+        const unverify = await unverify_user(userid,workshopname);
+        console.log("unverify",unverify);
+        if(unverify === true){
+            setRefresh(!refresh);
+        }
+        else{
+            await unverification_Offline(userid,workshopname);
+            await setRefresh(!refresh);
+        }
+    }
+    catch(err){
+        console.log("unverifyyyyFailed",err);
+    }
+}
 
 
 
@@ -69,46 +79,30 @@ const VerifiedToNotVerify = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.innerBox}>
                 <View style={styles.TittleView}>
-                    <Text style={styles.tittleText}>College of Engineering vadakara </Text>
+                    <Text style={styles.tittleText}>{groupname}</Text>
                 </View>
 
                 {/* cards are inside the scroll view*/}
                 <ScrollView contentContainerStyle={styles.cardView}  >
-                    {listOfStudent.map((value, index) => (
-                        <Animated.View
-                            style={{
-                                transform: [
-                                    {
-                                        translateX: slideAnimation[index].interpolate({
-                                            inputRange: [0, 1],
-                                            outputRange: [0, 500], // Adjust the distance to move
-                                        }),
-                                    },
-                                ],
-                                opacity: slideAnimation[index].interpolate({
-                                    inputRange: [0, 1],
-                                    outputRange: [1, 0], // Adjust the opacity to fade out
-                                }),
-                            }}
-                        >
+                    {userdata.map((value, index) => (
+                         
                             <Card style={styles.cardStyle} key={index}>
                                 <Card.Content style={styles.cardContentStyle}>
                                     <Image style={styles.imageStyle} source={require('../../../images/user4.png')}></Image>
                                     <Text style={styles.nameText}>{value.name}</Text>
                                     <View style={styles.textView}>
                                         <Text style={styles.txt1}> {value.email}</Text>
-                                        <Text style={styles.txt1}> {value.mobileNumber}</Text>
-                                        <Text style={styles.workshopTxt}>Google</Text>
+                                        <Text style={styles.txt1}> {value.mobile}</Text>
+                                        <Text style={styles.workshopTxt}>{workshopname}</Text>
                                         <Text style={styles.verifiedTxt}>Verified</Text>
                                     </View>
                                     <View style={styles.viewCheckBox}>
-                                        <TouchableOpacity onPress={()=>{animationToCard(index)}}>
+                                        <TouchableOpacity onPress={()=>{unverify_user_inGroup(value._id || value.id)}}>
                                             <Image source={require('../../../images/cross.jpg')} style={{ height: 17, width: 17 }} />
                                         </TouchableOpacity>
                                     </View>
                                 </Card.Content>
                             </Card>
-                        </Animated.View>
                     ))}
                 </ScrollView>
             </View>

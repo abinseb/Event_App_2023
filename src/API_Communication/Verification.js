@@ -25,3 +25,22 @@ export const userVerification=async(userID,workshopName)=>{
     }
     
 }
+
+
+
+
+export const unverify_user=async(userid,worshopname)=>{
+    try{
+        console.log("dtaaaa",userid,worshopname);
+        const response = await axios.post(`${url}/volunter/unverify`,{
+            "eventid":eventid,
+            "workshop" : worshopname,
+            "userid" : userid
+        });
+        console.log("out",response.data);
+        return await response.data.verification;
+    }
+    catch(errr){
+        console.error("error in unverification",errr);
+    }
+}
