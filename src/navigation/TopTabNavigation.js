@@ -6,12 +6,12 @@ const Tab = createMaterialTopTabNavigator()
 
 export default function VerifyTopTabNavigation({route}){
     // const route = useRoute();
-    const { groupid } = route.params;
+    const { groupid,groupname } = route.params;
 
     return(
         <Tab.Navigator>
-            <Tab.Screen name="NotVerified" component={NotVerifiedToVerify}  initialParams={{ groupid }} />
-            <Tab.Screen name="Verified" component={VerifiedToNotVerify}  initialParams={{ groupid }} />
+            <Tab.Screen name="NotVerified" component={NotVerifiedToVerify}  initialParams={{ groupid,groupname }} />
+            <Tab.Screen name="Verified" component={VerifiedToNotVerify}  initialParams={{ groupid,groupname }} />
         </Tab.Navigator>
     )
 }

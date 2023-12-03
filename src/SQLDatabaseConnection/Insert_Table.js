@@ -55,7 +55,7 @@ export const insertWorkshopTable=async()=>{
                     ],
                     ()=>console.log("inerted workshop"),
                     (error)=>{
-                        console.error("eworkshop insert error")
+                        console.error("eror workshop insert error")
                         console.log(error)
                 
                 }
@@ -79,7 +79,7 @@ export const insert_To_UserTable=async()=>{
        await db.transaction((tx)=>{
             userData.forEach((user)=>{
                tx.executeSql(
-                'INSERT INTO user_table (id,name,mobile,group,email)VALUES(?,?,?,?,?);',
+                'INSERT INTO user_table (id,name,mobile,groupid,email)VALUES(?,?,?,?,?);',
                 [
                     user._id,
                     user.name,
@@ -88,7 +88,7 @@ export const insert_To_UserTable=async()=>{
                     user.email,
                 ],
                 ()=> console.log("insert partily to userTable"),
-                (error)=> console.error("error in inserting",error)
+                (error)=> console.error("error in inserting_user_table",error)
                )
                 
             })

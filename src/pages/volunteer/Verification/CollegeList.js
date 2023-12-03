@@ -26,9 +26,10 @@ const BulkVerification =({navigation})=>{
   const handlePassTheSelection = (selectedItem) => {
     console.log("Selected college:", selectedItem.id);
     const groupid = selectedItem.id;
+    const groupname = selectedItem.name;
     console.log("idd",groupid);
 
-   navigation.navigate('TopTab',{groupid})
+   navigation.navigate('TopTab',{groupid,groupname})
   };
 
   return (
