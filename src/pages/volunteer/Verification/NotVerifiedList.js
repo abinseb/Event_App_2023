@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { userVerification } from "../../../API_Communication/Verification";
 import { user_Table_data, user_data_basedON_group } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { userVerification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
-import { useReducer } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 const NotVerifiedToVerify = ({ route,navigation }) => {
   // group id
@@ -20,6 +19,10 @@ const NotVerifiedToVerify = ({ route,navigation }) => {
   const [isChecked, setIsChecked] = useState([]);
 
   const [refresh, setRefresh] = useState(false);
+
+  // token
+  // token
+const token = useSelector((state) => state.auth.token);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -45,18 +48,19 @@ const NotVerifiedToVerify = ({ route,navigation }) => {
 
   const handleCheckboxPressed = async (id, index) => {
     // Toggle checkbox state
+    console.log("token____________",token);
     const updatedCheckedState =await [...isChecked];
     updatedCheckedState[index] =await !updatedCheckedState[index];
-     const verification = await userVerification(id,workshopname);
+     const verification = await userVerification(id,workshopname,token);
      if(verification === true){
         await setIsChecked(updatedCheckedState);
         setRefresh(!refresh);
      }
      else{
       console.log("iidddd",id);
-     await userVerification_Offline(id,workshopname);
-      await setIsChecked(updatedCheckedState);
-      setRefresh(!refresh);
+    //  await userVerification_Offline(id,workshopname);
+    //   await setIsChecked(updatedCheckedState);
+    //   setRefresh(!refresh);
      }
     
   };

@@ -53,7 +53,7 @@ const baseToUrI=(data)=>{
 }
 
 const state = useSelector((state) => state);
-const username = state.auth.username;
+const username = state.auth.token;
 console.log("hhiii,",username); 
 // calculate the widthe of each card based on the 
 const screenWidth = Dimensions.get('window').width;
@@ -81,7 +81,7 @@ const navigationToProfile=()=>{
    return(
     <SafeAreaView style={styles.container}>
       <View style={styles.AppBarView}>
-         <Text style={styles.nameText}> Hello, {username} </Text>
+         <Text style={styles.nameText}> Hello,  </Text>
          <TouchableOpacity style={styles.profileImageView} onPress={navigationToProfile}>
                <Image style={styles.profileImage} source={(require('./../../../images/icon2.png'))} />
                <Text style={styles.profileName}>Vimal</Text>

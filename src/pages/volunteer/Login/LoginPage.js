@@ -11,6 +11,7 @@ import {Data_for_Update_UserTable} from '../../../API_Communication/Load_data'
 // connection
 import { Check_Connection } from "../../../API_Communication/Check_connection";
 import { eventDataFetch, user_Table_data } from "../../../SQLDatabaseConnection/FetchDataFromTable";
+import { authenticate_Volunteer } from "../../../API_Communication/Athentication";
 
 
 const Login = ({ navigation }) => {
@@ -46,12 +47,35 @@ const EventData=async()=>{
     }
     // authenticate login
     const authenticateEntry =async () => {
-       
+        try{
+            const authData = await authenticate_Volunteer(userName,password);
         // const user ={userName};
-        console.log('username',userName)
-        // loginUser(user);
-       await dispatch(loginSuccess(userName));
-       await navigation.navigate('home');
+        console.log('authenticationData',authData)
+            if(authData.status === true){
+                await dispatch(loginSuccess(authData.userId,authData.token));
+                await showAuthenticationTrue();
+                await navigation.navigate('home');
+            }
+            else{
+                showAuthenticationFalse();
+                console.log("Authenticationjjjjjjjjjjjjjjjjjjjjjjjjjj failed");
+            }
+      
+        }
+        catch(errr){
+            console.log("Authentication failed",errr);
+            // alert("Invalid user credentials");
+            showAuthenticationFalse();
+        }
+        
+    }
+
+    function showAuthenticationTrue(){
+        ToastAndroid.show("Login Success",ToastAndroid.SHORT);
+    }
+
+    function showAuthenticationFalse(){
+        ToastAndroid.show("Invalid credentials",ToastAndroid.SHORT);
     }
 
     // usedispatch for state updating
@@ -71,11 +95,6 @@ const EventData=async()=>{
         setShowPassword(!showPassword);
     };
 
-//    user table
-const usrtbl=()=>{
-    user_Table_data();
-      //Data_for_Update_UserTable();
-}
 
     return (
         <KeyboardAwareScrollView contentContainerStyle={styles.container}>

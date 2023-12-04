@@ -29,6 +29,9 @@ const VerifiedToNotVerify = ({route}) => {
  const { groupid,groupname } = route.params;
  // workshopname from redux
  const workshopname = useSelector((state) => state.workshop.workshopName);
+//  token 
+const token = useSelector((state) => state.auth.token);
+
  const [userdata,setUserData] = useState([]);
 
  const [refresh, setRefresh] = useState(false);
@@ -60,7 +63,7 @@ const verifiedUserData=async()=>{
 // unverify the user data
 const unverify_user_inGroup=async(userid)=>{
     try{
-        const unverify = await unverify_user(userid,workshopname);
+        const unverify = await unverify_user(userid,workshopname,token);
         console.log("unverify",unverify);
         if(unverify === true){
             setRefresh(!refresh);

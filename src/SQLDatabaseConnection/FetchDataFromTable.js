@@ -199,3 +199,34 @@ export const group_dataFrom_groupTable = () => {
       }
     });
   };
+
+  // offline userverified_list
+   export const offline_verifiedUser_data = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `SELECT * FROM offline_table ;`,
+            [],
+            (_, { rows }) => {
+              if (rows.length > 0) {
+                const data = rows._array
+                console.log("#######offline_data###",data);
+                resolve(data);
+               
+              } else {
+                console.log("Offline_empty");
+                resolve(null); // Resolve with null if no rows are found
+              }
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if there's a SQL error
+            }
+          );
+        });
+      } catch (err) {
+        console.error(err);
+        reject(err); // Reject with the error if there's an exception
+      }
+    });
+  };

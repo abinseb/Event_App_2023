@@ -15,7 +15,8 @@ const SingleUserVerification = ({route,navigation}) => {
   const workshopname = useSelector((state)=>state.workshop.workshopName);
   // userdata store in a useState array
   const [user,setUser] = useState([]);
-
+// token
+const token = useSelector((state) => state.auth.token);
   // back navigation to scan
   const navigationToScan=()=>{
     navigation.navigate("ScanQRCode");
@@ -34,10 +35,15 @@ const SingleUserVerification = ({route,navigation}) => {
   function Capitalise(word) {
     return word.toUpperCase();
   }
+
+  // fetch the user data based on id
   const userDataFetch=async()=>{
     try{
+      console.log("userdata arryyaa__________",qrdata);
       const userData = await user_data_based_on_id(qrdata);
+     
     const singleUserData = await userData.data[0];
+    // if(userData.length >0){
     
     workshopValue.current= singleUserData.workshops[workshopname];
     console.log("kitttipoye",workshopValue.current)
@@ -48,6 +54,10 @@ const SingleUserVerification = ({route,navigation}) => {
         alert("Not Registered");
         navigationToScan();
       }
+    // }
+    // else{
+    //   alert("User Not Registered");
+    // }
       
  
     }
@@ -70,7 +80,7 @@ const SingleUserVerification = ({route,navigation}) => {
 
   // verification of user based on the workshop
   const handleVerification=async()=>{
-      const verification = await userVerification(qrdata,workshopname);
+      const verification = await userVerification(qrdata,workshopname,token);
      await console.log("kkkk",verification);
       if(verification === true){
         alert("Verification Success");

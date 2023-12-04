@@ -130,3 +130,18 @@ export const list_unverifiedUserData_basedOngroup=async(groupid,workshopname)=>{
     console.error("Error in verified list", error);
   }
 }
+
+
+// fetch the user id from the userdata
+export const fetchThe_userId=async(emailOrMobile)=>{
+  try{
+    const userId = await axios.get(`${url}/volunter/search/${eventId}/${emailOrMobile}`)
+    const userdata = userId.data;
+    console.log("userId",userdata.data);
+    return userdata.data;
+
+  }
+  catch(error){
+    console.log("Error in fetching",error);
+  }
+}

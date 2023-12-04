@@ -1,11 +1,34 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { View , Text,StyleSheet ,TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-paper";
+import { fetchThe_userId } from "../../../API_Communication/Load_data";
 const Input_data=({navigation})=>{
 
-    const handleCheckTheId=()=>{
-        navigation.navigate("singleUserVerify");
+    const qrdata = useRef('');
+
+    const [userName,setUserName] = useState('');
+    
+    const handleCheckTheId=async()=>{
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Regular expression for mobile number validation
+        const mobileRegex = /^\d{10}$/;
+        
+        console.log("userInput",userName.length);
+        if(emailRegex.test(userName) || mobileRegex.test(userName)){
+            const userData = await fetchThe_userId(userName);
+            console.log("userId fetched",userData[0]._id);
+            qrdata.current = userData[0]._id;
+            console.log("userId data",qrdata.current);
+            navigation.navigate("singleUserVerify",{qrdata:qrdata.current});
+            
+        }
+        else{
+            
+            navigation.navigate("singleUserVerify",{qrdata:userName});
+        }
+        
+        //navigation.navigate("singleUserVerify");
     }
     return(
         <SafeAreaView style={styles.container}>
@@ -13,6 +36,8 @@ const Input_data=({navigation})=>{
                 <Text style={{color:'#fff'}}>Id / Mobile Number /email id </Text>
                 <TextInput 
                     style={styles.styleInputText}
+                    value={userName}
+                    onChangeText={(value)=>setUserName(value)}
                 //  placeholder="Id or Mobile Number"
                 />
 

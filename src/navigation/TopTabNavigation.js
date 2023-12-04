@@ -14,17 +14,13 @@ export default function VerifyTopTabNavigation({route}){
             name="NotVerified" 
             component={NotVerifiedToVerify} 
             initialParams={ {groupid,groupname} }
-            options={{
-                unmountOnBlur:true,
-            }}  
+           
              />
             <Tab.Screen 
             name="Verified" 
             component={VerifiedToNotVerify}  
             initialParams={ {groupid,groupname} }
-            options={{
-                unmountOnBlur:true,
-            }}
+           
             />
         </Tab.Navigator>
     )
