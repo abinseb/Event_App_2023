@@ -7,6 +7,7 @@ import { list_unverifiedUserData_basedOngroup } from "../../../API_Communication
 import { Verified_user_data_basedON_group } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { unverify_user } from "../../../API_Communication/Verification";
 import { unverification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
+import { useFocusEffect } from "@react-navigation/native";
 
 const VerifiedToNotVerify = ({route}) => {
 
@@ -32,17 +33,18 @@ const VerifiedToNotVerify = ({route}) => {
 
  const [refresh, setRefresh] = useState(false);
 
-useEffect(()=>{
-
-    verifiedUserData();
-},[refresh])
+useFocusEffect(
+    React.useCallback(()=>{
+        verifiedUserData();
+    },[refresh])
+)
 
 
 const verifiedUserData=async()=>{
     try{
         const verifiedData = await list_unverifiedUserData_basedOngroup(groupid,workshopname);
     console.log("verified_data_______#####",verifiedData);
-    setUserData(verifiedData);
+    setUserData(verifiedData || []);
     
     
     }
@@ -50,7 +52,7 @@ const verifiedUserData=async()=>{
         console.log("error",err);
         const verifiedTableData = await Verified_user_data_basedON_group(groupid,workshopname);
         console.log("verified")
-        setUserData(verifiedTableData);
+        setUserData(verifiedTableData || []);
     }
 
 }

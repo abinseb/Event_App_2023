@@ -8,7 +8,8 @@ import { userVerification } from "../../../API_Communication/Verification";
 import { user_Table_data, user_data_basedON_group } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { userVerification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
 import { useReducer } from "react";
-const NotVerifiedToVerify = ({ route }) => {
+import { useFocusEffect } from "@react-navigation/native";
+const NotVerifiedToVerify = ({ route,navigation }) => {
   // group id
   const { groupid,groupname } = route.params;
   // workshopname from redux
@@ -20,10 +21,12 @@ const NotVerifiedToVerify = ({ route }) => {
 
   const [refresh, setRefresh] = useState(false);
 
-  useEffect(() => {
-     listOfUser_inGroup();
-    //user_Table_data();
-  }, [refresh]);
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch and update data here
+      listOfUser_inGroup();
+    }, [refresh])
+  );
 
   const listOfUser_inGroup = async () => {
     try {

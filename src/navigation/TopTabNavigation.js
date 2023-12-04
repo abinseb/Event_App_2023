@@ -10,8 +10,22 @@ export default function VerifyTopTabNavigation({route}){
 
     return(
         <Tab.Navigator>
-            <Tab.Screen name="NotVerified" component={NotVerifiedToVerify}  initialParams={{ groupid,groupname }} />
-            <Tab.Screen name="Verified" component={VerifiedToNotVerify}  initialParams={{ groupid,groupname }} />
+            <Tab.Screen 
+            name="NotVerified" 
+            component={NotVerifiedToVerify} 
+            initialParams={ {groupid,groupname} }
+            options={{
+                unmountOnBlur:true,
+            }}  
+             />
+            <Tab.Screen 
+            name="Verified" 
+            component={VerifiedToNotVerify}  
+            initialParams={ {groupid,groupname} }
+            options={{
+                unmountOnBlur:true,
+            }}
+            />
         </Tab.Navigator>
     )
 }

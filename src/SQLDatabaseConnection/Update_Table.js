@@ -55,7 +55,6 @@ export const unverification_Offline=(userid,workshop)=>{
                 `UPDATE user_table SET ${workshop} = ? WHERE id = ? ;`,
                 ['1',userid],
                 ()=>{
-                    offline_dataInsert(userid,workshop);
                     alert("Verified");
                     console.log("unverified_offline");
                     },
