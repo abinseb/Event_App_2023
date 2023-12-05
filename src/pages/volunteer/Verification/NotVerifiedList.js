@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, StyleSheet, Text, Image, ScrollView, Animated } from "react-native";
+import { View, StyleSheet, Text, Image, ScrollView } from "react-native";
 import { Card, Checkbox } from "react-native-paper";
 import { List_userbasedOn_group } from "../../../API_Communication/Load_data";
 import { useSelector } from "react-redux";
@@ -58,9 +58,9 @@ const token = useSelector((state) => state.auth.token);
      }
      else{
       console.log("iidddd",id);
-    //  await userVerification_Offline(id,workshopname);
-    //   await setIsChecked(updatedCheckedState);
-    //   setRefresh(!refresh);
+     await userVerification_Offline(id,workshopname);
+      await setIsChecked(updatedCheckedState);
+      setRefresh(!refresh);
      }
     
   };
@@ -76,28 +76,8 @@ const token = useSelector((state) => state.auth.token);
         </View>
         <ScrollView contentContainerStyle={styles.cardView}>
           {userList.map((value, index) => (
-            <Animated.View
-              key={index}
-              style={{
-                transform: [
-                  {
-                    translateX: isChecked[index]
-                      ? new Animated.Value(-500).interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, -500],
-                        })
-                      : 0,
-                  },
-                ],
-                opacity: isChecked[index]
-                  ? new Animated.Value(1).interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 0],
-                    })
-                  : 1,
-              }}
-            >
-              <Card style={styles.cardStyle}>
+            
+              <Card style={styles.cardStyle} key={index}>
                 <Card.Content style={styles.cardContentStyle}>
                   <Image style={styles.imageStyle} source={require("../../../images/user2.png")} />
                   <Text style={styles.nameText}>{value.name}</Text>
@@ -117,7 +97,6 @@ const token = useSelector((state) => state.auth.token);
                   </View>
                 </Card.Content>
               </Card>
-            </Animated.View>
           ))}
         </ScrollView>
         <View style={styles.buttonView}></View>

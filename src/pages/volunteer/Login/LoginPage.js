@@ -47,6 +47,10 @@ const EventData=async()=>{
     }
     // authenticate login
     const authenticateEntry =async () => {
+        if(userName == '' && password == ''){
+            showAuthenticationEmpty();
+        }
+        else{
         try{
             const authData = await authenticate_Volunteer(userName,password);
         // const user ={userName};
@@ -68,6 +72,7 @@ const EventData=async()=>{
             // alert("Invalid user credentials");
             showAuthenticationFalse();
         }
+        }
         
     }
 
@@ -82,6 +87,10 @@ const EventData=async()=>{
 
     function showAuthenticationFalse(){
         ToastAndroid.show("Invalid credentials",ToastAndroid.SHORT);
+    }
+
+    function showAuthenticationEmpty(){
+        ToastAndroid.show("Please Enter a valid username and password",ToastAndroid.SHORT);
     }
 
     // usedispatch for state updating

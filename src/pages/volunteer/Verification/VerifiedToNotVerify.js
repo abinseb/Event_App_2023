@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, StyleSheet, Text, Image, ScrollView, TouchableOpacity, Animated } from "react-native";
-import { Card, Checkbox, Icon } from "react-native-paper";
+import { View, StyleSheet, Text, Image, ScrollView, TouchableOpacity} from "react-native";
+import { Card} from "react-native-paper";
 import { useSelector } from "react-redux";
 import { list_unverifiedUserData_basedOngroup } from "../../../API_Communication/Load_data";
 import { Verified_user_data_basedON_group } from "../../../SQLDatabaseConnection/FetchDataFromTable";
@@ -11,21 +11,6 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const VerifiedToNotVerify = ({route}) => {
 
-
-    // const animationToCard = (index) => {
-    //     console.log(index);
-    //     Animated.timing(slideAnimation[index], {
-    //         toValue: 1,
-    //         duration: 500, // Adjust the duration as needed
-    //         useNativeDriver: true,
-    //     }).start(() => {
-    //         // Animation finished
-    //         // onAnimationEnd();
-    //     });
-    // }
-
-    
- // group id
  const { groupid,groupname } = route.params;
  // workshopname from redux
  const workshopname = useSelector((state) => state.workshop.workshopName);

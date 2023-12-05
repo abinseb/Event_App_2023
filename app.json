@@ -1,6 +1,16 @@
 {
   "expo": {
-   
+    "plugins": [
+      [
+        "expo-build-properties", 
+        {
+        "android": 
+                {
+                  "usesCleartextTraffic": true
+                }
+        }
+      ]
+    ],
     "name": "Event_app_2023",
     "slug": "Event_app_2023",
     "version": "1.0.0",
