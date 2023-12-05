@@ -1,8 +1,27 @@
 import React from "react";
-import {View,Text,StyleSheet,Image} from 'react-native';
+import {View,Text,StyleSheet,Image,BackHandler,Platform} from 'react-native';
 import { List, Avatar, IconButton } from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
+import { logoutSuccess } from "../../../redux/Actions";
+import { deleteAllTables } from "../../../SQLDatabaseConnection/Drop_table";
 const VolunteerProfile=()=>{
+const dispatch = useDispatch();
+
+    const log_Out_fromDevice=async()=>{
+        try{
+           await dispatch(logoutSuccess());
+           await deleteAllTables();
+           await exit_App();
+
+        }
+        catch(errr){
+            console.log("Error in logout",errr);
+        }
+    }
+    const exit_App=()=>{
+        BackHandler.exitApp();
+    }
     return(
        <SafeAreaView style={styles.container}>
         <View style={styles.profileTittle}>
@@ -50,9 +69,7 @@ const VolunteerProfile=()=>{
                     }
                     color="#fff"
                     style={styles.listItem}
-                    onPress={()=>{
-
-                    }}
+                    onPress={log_Out_fromDevice}
                     
                 />
 

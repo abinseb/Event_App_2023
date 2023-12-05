@@ -230,3 +230,33 @@ export const group_dataFrom_groupTable = () => {
       }
     });
   };
+
+  export const fetch_The_id_From_UserTable = (mobileOrEmail) => {
+    return new Promise((resolve, reject) => {
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT id FROM user_table WHERE mobile = ? OR email = ? ;',
+            [mobileOrEmail,mobileOrEmail],
+            (_, { rows }) => {
+              if (rows.length > 0) {
+                const data = rows._array
+                console.log("#######iddd###",data);
+                resolve(data);
+               
+              } else {
+                console.log("usertable empty");
+                resolve(null); // Resolve with null if no rows are found
+              }
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if there's a SQL error
+            }
+          );
+        });
+      } catch (err) {
+        console.error(err);
+        reject(err); // Reject with the error if there's an exception
+      }
+    });
+  };

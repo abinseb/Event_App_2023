@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {Text,View,StyleSheet,TouchableOpacity} from 'react-native';
+import {Text,View,StyleSheet,TouchableOpacity,ToastAndroid} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 // import BarCodeScan from "../../../components/BarCodeScan";
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -7,12 +7,13 @@ import { useSelector } from "react-redux";
 import { Button } from "react-native-paper";
 import { offline_verifiedUser_data } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { check_Offline_table_Count } from "../../../SQLDatabaseConnection/Fetch_Count_of_Table";
+import { sync_OfflineData_verification } from "../../../API_Communication/Verification";
 const ScanQR=({navigation})=>{
     const [scanner,setScanner]= useState(false);
 
     const workshopName = useSelector((state)=>state.workshop.workshopName);
     const [capitalWorkshop,setCapitalWorkshop] = useState('');
-    const count = useRef(0);
+
     const [offlineCount,setOfflineCount] = useState(0);
 
     useEffect(()=>{
@@ -42,15 +43,37 @@ function Capitalise(word) {
     // count of offline verified user data
 const offline_verified_count=async()=>{
     const offlineCount = await check_Offline_table_Count();
-        console.log("count",offlineCount)
-        count.current=offlineCount;
-        setOfflineCount(offlineCount)
-        console.log("count",count.current)
+        console.log("count",offlineCount);
+        setOfflineCount(offlineCount);
+     
 }
     // sync offlin verified user data to the main db
     const syncOfflineToOnline=async()=>{
-        //offline_verifiedUser_data();
+        const oflineverifiedData = await offline_verifiedUser_data();
+        console.log("offline id and workshop",oflineverifiedData);
+        const syncdata = await sync_OfflineData_verification(oflineverifiedData);
+        console.log("offlineData",syncdata.message);
+        if(syncdata.message === "saved"){
+            console.log("synced");
+            showToastNotificationOfSuccess();
+        }
+        else{
+            showToastNotificationFailer();
+        }
+
     }
+
+    // message of toast
+    function showToastNotificationOfSuccess(){
+        ToastAndroid.show("Synced",ToastAndroid.SHORT);
+    }
+
+    // message of fail
+    function showToastNotificationFailer(){
+        ToastAndroid.show("Syncing Failed",ToastAndroid.SHORT);
+    }
+
+
     return(
         <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={handleBackNavigation} style={styles.backNavigationTouchable}>

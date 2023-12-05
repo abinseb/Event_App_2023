@@ -7,9 +7,9 @@ export const loginSuccess =(username,token)=>({
     payload:{username,token},
 });
 
-// export const logoutSuccess=()=>({
-//     type:'LOGOUT_SUCCESS',
-// });
+export const logoutSuccess=()=>({
+    type:'LOGOUT_SUCCESS',
+});
 
 
 // login user 

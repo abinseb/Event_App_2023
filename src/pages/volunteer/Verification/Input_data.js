@@ -3,6 +3,7 @@ import { View , Text,StyleSheet ,TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-paper";
 import { fetchThe_userId } from "../../../API_Communication/Load_data";
+import { fetch_The_id_From_UserTable } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 const Input_data=({navigation})=>{
 
     const qrdata = useRef('');
@@ -10,25 +11,32 @@ const Input_data=({navigation})=>{
     const [userName,setUserName] = useState('');
     
     const handleCheckTheId=async()=>{
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // Regular expression for mobile number validation
-        const mobileRegex = /^\d{10}$/;
-        
-        console.log("userInput",userName.length);
-        if(emailRegex.test(userName) || mobileRegex.test(userName)){
-            const userData = await fetchThe_userId(userName);
-            console.log("userId fetched",userData[0]._id);
-            qrdata.current = userData[0]._id;
-            console.log("userId data",qrdata.current);
-            navigation.navigate("singleUserVerify",{qrdata:qrdata.current});
+        try{
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // Regular expression for mobile number validation
+            const mobileRegex = /^\d{10}$/;
             
+            console.log("userInput",userName.length);
+            if(emailRegex.test(userName) || mobileRegex.test(userName)){
+                const userData = await fetchThe_userId(userName);
+                console.log("userId fetched",userData[0]._id);
+                qrdata.current = userData[0]._id;
+                console.log("userId data",qrdata.current);
+                navigation.navigate("singleUserVerify",{qrdata:qrdata.current});
+                
+            }
+            else{
+                
+                navigation.navigate("singleUserVerify",{qrdata:userName});
+            }
         }
-        else{
-            
-            navigation.navigate("singleUserVerify",{qrdata:userName});
+        catch(errr){
+            console.log("network error",errr);
+            const userid = await fetch_The_id_From_UserTable(userName);
+            console.log("userrrrr",userid);
+
         }
         
-        //navigation.navigate("singleUserVerify");
     }
     return(
         <SafeAreaView style={styles.container}>

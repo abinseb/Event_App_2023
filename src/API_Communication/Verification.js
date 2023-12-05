@@ -53,3 +53,19 @@ export const unverify_user=async(userid,worshopname,token)=>{
         console.error("error in unverification",errr);
     }
 }
+
+// http://localhost:3000/volunter/sync
+
+export const sync_OfflineData_verification=async(offlineData)=>{
+    try{
+      const response = await axios.post(`${url}/volunter/sync`,{
+            "event" : eventid,
+            "data" :offlineData,
+        });
+        console.log(response.data);
+        return response.data;
+    }
+    catch(errr){
+        console.log("Error in syncing",errr);
+    }
+}
