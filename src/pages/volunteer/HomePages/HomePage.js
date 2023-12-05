@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {View,Text,StyleSheet, Image,ScrollView, Dimensions,TouchableOpacity,} from 'react-native';
+import {View,Text,StyleSheet, Image,ScrollView, Dimensions,TouchableOpacity,BackHandler,Alert} from 'react-native';
 import { Card,Title,} from "react-native-paper";
 import {SafeAreaView} from 'react-native-safe-area-context'
 import { useDispatch,useSelector } from "react-redux";
@@ -14,6 +14,9 @@ const HomePage =({navigation})=>{
 
 const [event , setEvent] = useState([]);
 // useEffect for fetching all events list in the screen
+const encodedBase64 =
+'iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==';
+
    useEffect(()=>{
      workshopData();
    
@@ -25,7 +28,7 @@ const [event , setEvent] = useState([]);
          //  console.log("Workshop title:", workshop);
           workshop.forEach( element => {
             element.title = capitalizeWord(element.title);
-            element.icon =baseToUrI(element.icon);
+           console.log("icon______________",element.icon);
            
              
           });
@@ -48,12 +51,10 @@ const [event , setEvent] = useState([]);
    return word.charAt(0).toUpperCase() + word.slice(1);
  }
   
-const baseToUrI=(data)=>{
-   return `data:image/png;base64,${data}`;
-}
+
 
 const state = useSelector((state) => state);
-const username = state.auth.token;
+const username = state.auth.username;
 console.log("hhiii,",username); 
 // calculate the widthe of each card based on the 
 const screenWidth = Dimensions.get('window').width;
@@ -78,13 +79,14 @@ const navigationToProfile=()=>{
    navigation.navigate("Profile");
 }
 
+
    return(
     <SafeAreaView style={styles.container}>
       <View style={styles.AppBarView}>
-         <Text style={styles.nameText}> Hello,  </Text>
+         <Text style={styles.nameText}> Hello, {username}  </Text>
          <TouchableOpacity style={styles.profileImageView} onPress={navigationToProfile}>
                <Image style={styles.profileImage} source={(require('./../../../images/icon2.png'))} />
-               <Text style={styles.profileName}>Vimal</Text>
+               <Text style={styles.profileName}>{username}</Text>
          </TouchableOpacity>
       </View>
       <View style={styles.viewCardBox}>
@@ -95,7 +97,7 @@ const navigationToProfile=()=>{
                   <TouchableOpacity onPress={()=>{handleNavigation(workshop.title)}}>
                      <Card key={index} style={[styles.cardStyle ,{width:cardWidth -20 , height:cardWidth}]}>
                            <Card.Content >
-                          <Image style={styles.eventImage} source={{uri:''}} />
+                          <Image style={styles.eventImage} source={{uri: `data:image/png;base64,${encodedBase64}`}} />
                         </Card.Content>
                         <Card.Content style={styles.eventNameView}> 
                            <Title style={{ fontWeight:'300', fontSize: workshop.title.length > 6 ? 16 : 16 ,letterSpacing:0.32 , paddingBottom:10}} numberOfLines ={2} ellipsizeMode="tail">{workshop.title}</Title> 

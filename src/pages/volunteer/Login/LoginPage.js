@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView ,ToastAndroid} from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView ,ToastAndroid, Alert, BackHandler} from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-paper";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -52,9 +52,10 @@ const EventData=async()=>{
         // const user ={userName};
         console.log('authenticationData',authData)
             if(authData.status === true){
-                await dispatch(loginSuccess(authData.userId,authData.token));
+                await dispatch(loginSuccess(authData.name,authData.token));
                 await showAuthenticationTrue();
-                await navigation.navigate('home');
+                await navigationToHome();
+                
             }
             else{
                 showAuthenticationFalse();
@@ -68,6 +69,11 @@ const EventData=async()=>{
             showAuthenticationFalse();
         }
         
+    }
+
+    // navigation to home if authentication is true
+    const navigationToHome=()=>{
+        navigation.replace('home');
     }
 
     function showAuthenticationTrue(){
@@ -94,6 +100,41 @@ const EventData=async()=>{
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
+
+// avoid backnvigation
+const handleBacknavigation=()=>{
+    Alert.alert(
+        "Exit App",
+        "Do you want to exit?",
+        [
+            {
+                text:"No",
+                onPress:()=>{
+                    navigation.navigate("Login");
+                },
+                style:'cancel'
+            },
+            {
+                text:"Yes",
+                onPress:()=>{
+                    BackHandler.exitApp();
+                }
+            }
+        ],
+        {cancelable:false}
+    );
+    return true;
+};
+
+useEffect(()=>{
+    const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBacknavigation
+    );
+    return()=>{
+        backhandler.remove();
+    }
+},[navigation]);
 
 
     return (
