@@ -139,6 +139,37 @@ export const group_dataFrom_groupTable = () => {
     });
   };
 
+  // fetch the group name from group table
+  export const groupName_from_id = (groupid) => {
+    return new Promise((resolve, reject) => {
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            'SELECT name FROM group_table WHERE id =?;',
+            [groupid],
+            (_, { rows }) => {
+              if (rows.length > 0) {
+                const data = rows._array
+                console.log("#######groupname",data);
+                resolve(data[0].name);
+               
+              } else {
+                console.log("empty");
+                resolve(null); // Resolve with null if no rows are found
+              }
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if there's a SQL error
+            }
+          );
+        });
+      } catch (err) {
+        console.error(err);
+        reject(err); // Reject with the error if there's an exception
+      }
+    });
+  };
+
   export const user_data_basedON_group = (groupid,workshopname) => {
     return new Promise((resolve, reject) => {
       try {

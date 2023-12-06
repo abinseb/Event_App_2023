@@ -32,7 +32,7 @@ export const userVerification_Offline=(userid,workshop)=>{
         db.transaction((tx)=>{
             tx.executeSql(
                 `UPDATE user_table SET ${workshop} = ? WHERE id = ? ;`,
-                ['2',userid],
+                ['2.0',userid],
                 ()=>{
                     offline_dataInsert(userid,workshop);
                     alert("Verified");
@@ -53,9 +53,9 @@ export const unverification_Offline=(userid,workshop)=>{
         db.transaction((tx)=>{
             tx.executeSql(
                 `UPDATE user_table SET ${workshop} = ? WHERE id = ? ;`,
-                ['1',userid],
+                ['1.0',userid],
                 ()=>{
-                    alert("Verified");
+                   
                     console.log("unverified_offline");
                     },
                 (error)=>console.log("unverificationError",error)

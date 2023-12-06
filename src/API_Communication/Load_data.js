@@ -119,16 +119,13 @@ export const List_userbasedOn_group=async(groupId,workshopName)=>{
 }
 
 // unverified user data based on group and workshop
-export const list_unverifiedUserData_basedOngroup=async(groupid,workshopname)=>{
-  try{
+export const list_verifiedUserData_basedOngroup=async(groupid,workshopname)=>{
+  
     const response = await axios.get(`${url}/volunter/getusergroup/unverify/${eventId}/${groupid}/${workshopname}`);
     const verifiedUser = response.data;
     console.log("verified user based on group",verifiedUser);
     return await verifiedUser.data;
-  }
-  catch(error){
-    console.error("Error in verified list", error);
-  }
+ 
 }
 
 

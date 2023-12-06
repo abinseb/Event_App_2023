@@ -5,7 +5,7 @@ import { MaterialCommunityIcons,Ionicons,FontAwesome5,AntDesign } from '@expo/ve
 import { Button } from "react-native-paper";
 import { user_data_based_on_id } from "../../../API_Communication/Load_data";
 import { useSelector } from "react-redux";
-import { userDetailsBasedOnIDFromTable } from "../../../SQLDatabaseConnection/FetchDataFromTable";
+import { groupName_from_id, userDetailsBasedOnIDFromTable } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { userVerification } from "../../../API_Communication/Verification";
 import { userVerification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
 const SingleUserVerification = ({route,navigation}) => {
@@ -17,6 +17,9 @@ const SingleUserVerification = ({route,navigation}) => {
   const [user,setUser] = useState([]);
 // token
 const token = useSelector((state) => state.auth.token);
+
+// group name
+const [groupname,setGroupname] = useState('');
   // back navigation to scan
   const navigationToScan=()=>{
     navigation.navigate("ScanQRCode");
@@ -42,13 +45,17 @@ const token = useSelector((state) => state.auth.token);
       console.log("userdata arryyaa__________",qrdata);
       const userData = await user_data_based_on_id(qrdata);
      
-    const singleUserData = await userData.data[0];
-    // if(userData.length >0){
-    
-    workshopValue.current= singleUserData.workshops[workshopname];
-    console.log("kitttipoye",workshopValue.current)
-      if(singleUserData.workshops[workshopname] != 0){
-        setUser(singleUserData);
+      const singleUserData = await userData.data[0];
+   
+      //useref workshop value
+      workshopValue.current= singleUserData.workshops[workshopname];
+      console.log("workshopname",workshopValue.current)
+
+     if(singleUserData.workshops[workshopname] != 0){
+        const groupData = await groupName_from_id(singleUserData.group);
+        setGroupname(groupData);
+          console.log("groupdata",groupData);
+         await setUser(singleUserData);
       }
       else{
         alert("Not Registered");
@@ -64,15 +71,19 @@ const token = useSelector((state) => state.auth.token);
     catch(error){
       alert("offf");
       const offlinedata = await userDetailsBasedOnIDFromTable(qrdata);
-      console.log("offlinedata###########",offlinedata[0][workshopname]);
+      console.log("offlinedata###########",offlinedata[0]);
       
     if(Number(offlinedata[0][workshopname]) != 0){
       workshopValue.current= (Number(offlinedata[0][workshopname]));
       setUser(offlinedata[0]);
+      const groupdataname = await groupName_from_id(offlinedata[0].groupid);
+      setGroupname(groupdataname);
+      
     
       }
       else{
         alert("User Not Registered");
+        navigationToScan();
       }
     }
     
@@ -114,7 +125,7 @@ const token = useSelector((state) => state.auth.token);
         <View style={styles.profileBox}>
             <View style={styles.nameTextTopView}>
                 <Text style={styles.nameText}>{user.name} </Text>
-                <Text style={styles.institusionText}>College of Engineering Vadakara</Text>
+                <Text style={styles.institusionText}>{groupname}</Text>
             </View> 
            <View style={{alignSelf:'center',alignItems:'center',paddingTop:20}}>
            <Text style={styles.workshopNameStyle}>{worshopNamecapital}</Text>

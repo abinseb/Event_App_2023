@@ -8,6 +8,7 @@ import { Button } from "react-native-paper";
 import { offline_verifiedUser_data } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { check_Offline_table_Count } from "../../../SQLDatabaseConnection/Fetch_Count_of_Table";
 import { sync_OfflineData_verification } from "../../../API_Communication/Verification";
+import { deleteOfflineTable } from "../../../SQLDatabaseConnection/deleteTable";
 const ScanQR=({navigation})=>{
     const [scanner,setScanner]= useState(false);
 
@@ -16,10 +17,12 @@ const ScanQR=({navigation})=>{
 
     const [offlineCount,setOfflineCount] = useState(0);
 
+    const [refresh , setrefresh] = useState(false);
+
     useEffect(()=>{
         offline_verified_count();
         setCapitalWorkshop(Capitalise(workshopName));
-    },[])
+    },[refresh])
 
    
     // workshop name capitalise to normal
@@ -55,7 +58,10 @@ const offline_verified_count=async()=>{
         console.log("offlineData",syncdata.message);
         if(syncdata.message === "saved"){
             console.log("synced");
+            await deleteOfflineTable();
             showToastNotificationOfSuccess();
+           await setrefresh(!refresh);
+
         }
         else{
             showToastNotificationFailer();
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         borderRadius:150,
         alignItems:'center',
-        marginBottom:'10%'
+       
 
     },
     innerButton:{
@@ -178,12 +184,12 @@ const styles = StyleSheet.create({
     backNavigationTouchable:{
         top:0,
         position:'absolute',
-        marginTop:40,
-        margin:10,
+        marginTop:'14%',
+        marginLeft:'5%',
     },
 
     workshopNameView:{
-        top:130,
+        top:'15%',
         position:'absolute',
         alignSelf:'center',
         alignItems:'center'
@@ -194,6 +200,7 @@ const styles = StyleSheet.create({
         color:'#ffffff'
     },
     syncButtonView:{
+        paddingTop:'10%',
         alignSelf:'center',
         alignItems:'center',
         

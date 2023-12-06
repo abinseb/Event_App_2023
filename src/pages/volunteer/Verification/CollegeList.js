@@ -37,35 +37,37 @@ const BulkVerification =({navigation})=>{
       <View style={styles.TopTextView}>
         <Text style={styles.TextStyle}>Select the Institution from the List</Text>
       </View>
-      <SearchableDropDown
-        onTextChange={(text) => console.log(text)}
-        onItemSelect={handlePassTheSelection}
-        containerStyle={{ paddingTop: 50 }}
-        textInputStyle={{
-          padding: 12,
-          borderWidth: 1,
-          borderColor: '#ccc',
-          backgroundColor: '#FAF7F6',
-        }}
-        itemStyle={{
-          padding: 10,
-          marginTop: 2,
-          backgroundColor: '#FAF9F8',
-          borderColor: '#bbb',
-          borderWidth: 1,
-        }}
-        itemTextStyle={{
-          color: '#222',
-        }}
-        itemsContainerStyle={{
-          maxHeight: '100%',
-        }}
-        items={items}
-        defaultIndex={2}
-        placeholder="Select a college"
-        resetValue={false}
-        underlineColorAndroid="transparent"
-      />
+      <View style={styles.searchableDropDownContainer}>
+        <SearchableDropDown 
+          onTextChange={(text) => console.log(text)}
+          onItemSelect={handlePassTheSelection}
+          containerStyle={{ paddingTop: 50 }}
+          textInputStyle={{
+            padding: 12,
+            borderWidth: 1,
+            borderColor: '#ccc',
+            backgroundColor: '#FAF7F6',
+          }}
+          itemStyle={{
+            padding: 10,
+            marginTop: 2,
+            backgroundColor: '#FAF9F8',
+            borderColor: '#bbb',
+            borderWidth: 1,
+          }}
+          itemTextStyle={{
+            color: '#222',
+          }}
+          itemsContainerStyle={{
+            maxHeight: '100%',
+          }}
+          items={items}
+          defaultIndex={2}
+          placeholder="Select a college"
+          resetValue={false}
+          underlineColorAndroid="transparent"
+        />
+      </View>
     </SafeAreaView>
     )
 }
@@ -82,8 +84,8 @@ const styles = StyleSheet.create({
     TopTextView:{
       top:0,
       position:'absolute',
-      paddingTop:50,
-    alignSelf:'center'
+      paddingTop:'20%',
+    alignSelf:'center',
     },
     TextStyle:{
       fontWeight:'300',
@@ -93,5 +95,8 @@ const styles = StyleSheet.create({
     viewSearchableDropDown:{
       alignSelf:'center',
     
+    },
+    searchableDropDownContainer:{
+      marginTop:'10%'
     }
 })

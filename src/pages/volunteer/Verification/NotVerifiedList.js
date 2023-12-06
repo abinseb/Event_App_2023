@@ -8,6 +8,7 @@ import { userVerification } from "../../../API_Communication/Verification";
 import { user_Table_data, user_data_basedON_group } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { userVerification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
 import { useFocusEffect } from "@react-navigation/native";
+import BoxText from "../../../components/BoxText";
 const NotVerifiedToVerify = ({ route,navigation }) => {
   // group id
   const { groupid,groupname } = route.params;
@@ -70,6 +71,9 @@ const token = useSelector((state) => state.auth.token);
 
   return (
     <SafeAreaView style={styles.container}>
+      {userList.length == 0 ? 
+      <BoxText message='All Verified' />
+      :
       <View style={styles.innerBox}>
         <View style={styles.TittleView}>
           <Text style={styles.tittleText}>{groupname} </Text>
@@ -101,6 +105,7 @@ const token = useSelector((state) => state.auth.token);
         </ScrollView>
         <View style={styles.buttonView}></View>
       </View>
+      }
     </SafeAreaView>
   );
 };

@@ -3,11 +3,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet, Text, Image, ScrollView, TouchableOpacity} from "react-native";
 import { Card} from "react-native-paper";
 import { useSelector } from "react-redux";
-import { list_unverifiedUserData_basedOngroup } from "../../../API_Communication/Load_data";
+import { list_verifiedUserData_basedOngroup } from "../../../API_Communication/Load_data";
 import { Verified_user_data_basedON_group } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { unverify_user } from "../../../API_Communication/Verification";
 import { unverification_Offline } from "../../../SQLDatabaseConnection/Update_Table";
 import { useFocusEffect } from "@react-navigation/native";
+import BoxText from "../../../components/BoxText";
 
 const VerifiedToNotVerify = ({route}) => {
 
@@ -30,19 +31,16 @@ useFocusEffect(
 
 const verifiedUserData=async()=>{
     try{
-        const verifiedData = await list_unverifiedUserData_basedOngroup(groupid,workshopname);
+        const verifiedData = await list_verifiedUserData_basedOngroup(groupid,workshopname);
     console.log("verified_data_______#####",verifiedData);
     setUserData(verifiedData || []);
-    
-    
     }
-    catch(err){
-        console.log("error",err);
+    catch(error){
+        console.error("errorrrr_____________");
         const verifiedTableData = await Verified_user_data_basedON_group(groupid,workshopname);
         console.log("verified")
         setUserData(verifiedTableData || []);
     }
-
 }
 
 // unverify the user data
@@ -67,12 +65,16 @@ const unverify_user_inGroup=async(userid)=>{
 
     return (
         <SafeAreaView style={styles.container}>
+            {userdata.length == 0 ?
+                <BoxText message='No User Verified' />
+                :
             <View style={styles.innerBox}>
                 <View style={styles.TittleView}>
                     <Text style={styles.tittleText}>{groupname}</Text>
                 </View>
-
-                {/* cards are inside the scroll view*/}
+                
+               
+                
                 <ScrollView contentContainerStyle={styles.cardView}  >
                     {userdata.map((value, index) => (
                          
@@ -95,7 +97,9 @@ const unverify_user_inGroup=async(userid)=>{
                             </Card>
                     ))}
                 </ScrollView>
+
             </View>
+            }
         </SafeAreaView>
     )
 }
