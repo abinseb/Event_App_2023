@@ -7,20 +7,43 @@ import { connect } from 'react-redux';
 
 
 // impoort workshop redux action
-import { worshopSelect } from "../../../redux/Actions";
+import { loginSuccess, worshopSelect } from "../../../redux/Actions";
 import { workshopDataFetch } from "../../../SQLDatabaseConnection/FetchDataFromTable";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUserData } from "../../../AsyncStorage/StoreUserCredentials";
 
 const HomePage =({navigation})=>{
 
+   //const {userData }= JSON.parse(AsyncStorage.getItem('userData')) || {} ;
+   //console.log("userAsync",userData);
 const [event , setEvent] = useState([]);
 // useEffect for fetching all events list in the screen
 const encodedBase64 =
 'iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==';
 
+// for storing data in redux we call useDispatch function for state updation
+const dispatch = useDispatch();
+
+// initial rendering
    useEffect(()=>{
+     
      workshopData();
+     volunteerCredentials();
    
    },[])
+
+   // user credentials fetch
+   const volunteerCredentials =async()=>{
+      try{
+         const {username,token} =await getUserData();
+         dispatch(loginSuccess(username,token));
+         console.log("userName",username);
+         console.log("token",token);
+      }
+      catch(err){
+
+      }
+   }
 
    const workshopData = async () => {
       try {
@@ -60,7 +83,6 @@ console.log("hhiii,",username);
 const screenWidth = Dimensions.get('window').width;
 const cardWidth = (screenWidth - 40) / 2;
 
-const dispatch = useDispatch();
 
 // navigation to scan
 const handleNavigation=async(workshop)=>{

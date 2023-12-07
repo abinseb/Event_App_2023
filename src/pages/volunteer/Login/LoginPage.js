@@ -1,106 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView ,ToastAndroid, Alert, BackHandler} from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ToastAndroid, Alert, BackHandler } from 'react-native';
 import { Button } from "react-native-paper";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { connect } from "react-redux";
-import { useDispatch } from 'react-redux';
-import { loginUser ,loginSuccess } from "../../../redux/Actions";
-import {Data_for_Update_UserTable} from '../../../API_Communication/Load_data'
+
 // connection
 import { Check_Connection } from "../../../API_Communication/Check_connection";
 import { eventDataFetch, user_Table_data } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { authenticate_Volunteer } from "../../../API_Communication/Athentication";
+import { getUserData, saveUserData } from "../../../AsyncStorage/StoreUserCredentials";
 
+import { useNavigation } from "@react-navigation/native";
 
 const Login = ({ navigation }) => {
-const [event , setEvent]= useState('');
-// render network status
-    useEffect(()=>{
-        NetworkConnection();
-        EventData();
-       
-    },[])
+    const [event, setEvent] = useState('');
+    // render network status
 
-    // update user tabel
-
-
-const EventData=async()=>{
- const eventName= await eventDataFetch();
-  await console.log("eventname",eventName.title);
-  setEvent(eventName.title);
-}
-    // check network status
-    const NetworkConnection=async()=>{
-        const network = await Check_Connection();
-       console.log("nnnn",network);
-       if(network === true){
-        // alert('You are Offline , Please Connect')
-        showToastNotification();
-       }
-    }
-
-    // show toast notification
-    function showToastNotification(){
-        ToastAndroid.show("You are Offline",ToastAndroid.SHORT);
-    }
-    // authenticate login
-    const authenticateEntry =async () => {
-        if(userName == '' && password == ''){
-            showAuthenticationEmpty();
-        }
-        else{
-        try{
-            const authData = await authenticate_Volunteer(userName,password);
-        // const user ={userName};
-        console.log('authenticationData',authData)
-            if(authData.status === true){
-                await dispatch(loginSuccess(authData.name,authData.token));
-                await showAuthenticationTrue();
-                await navigationToHome();
-                
-            }
-            else{
-                showAuthenticationFalse();
-                console.log("Authenticationjjjjjjjjjjjjjjjjjjjjjjjjjj failed");
-            }
-      
-        }
-        catch(errr){
-            console.log("Authentication failed",errr);
-            // alert("Invalid user credentials");
-            showAuthenticationFalse();
-        }
-        }
-        
-    }
-
-    // navigation to home if authentication is true
-    const navigationToHome=()=>{
-        navigation.replace('home');
-    }
-
-    function showAuthenticationTrue(){
-        ToastAndroid.show("Login Success",ToastAndroid.SHORT);
-    }
-
-    function showAuthenticationFalse(){
-        ToastAndroid.show("Invalid credentials",ToastAndroid.SHORT);
-    }
-
-    function showAuthenticationEmpty(){
-        ToastAndroid.show("Please Enter a valid username and password",ToastAndroid.SHORT);
-    }
-
-    // usedispatch for state updating
-    const dispatch = useDispatch();
+//const navigation = useNavigation();
 
     // State variable to hold the password 
     const [password, setPassword] = useState('');
 
     // state variable to hold the username
-    const [userName , setUserName] = useState('');
+    const [userName, setUserName] = useState('');
 
     // State variable to track password visibility 
     const [showPassword, setShowPassword] = useState(false);
@@ -109,41 +31,128 @@ const EventData=async()=>{
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
+ 
+    const [loginstate,setLoginState] = useState(null);
 
-// avoid backnvigation
-const handleBacknavigation=()=>{
-    Alert.alert(
-        "Exit App",
-        "Do you want to exit?",
-        [
-            {
-                text:"No",
-                onPress:()=>{
-                    navigation.navigate("Login");
-                },
-                style:'cancel'
-            },
-            {
-                text:"Yes",
-                onPress:()=>{
-                    BackHandler.exitApp();
-                }
-            }
-        ],
-        {cancelable:false}
-    );
-    return true;
-};
+    useEffect(async() => {
 
-useEffect(()=>{
-    const backhandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        handleBacknavigation
-    );
-    return()=>{
-        backhandler.remove();
+        const {username,token} = await getUserData();
+        if(token === null){
+            NetworkConnection();
+            EventData();
+        }
+        else{
+            navigationToHome();
+        }
+
+    }, [event])
+
+    // update user tabel
+
+
+    const EventData = async () => {
+        const eventName = await eventDataFetch();
+        await console.log("eventname", eventName.title);
+        setEvent(eventName.title);
     }
-},[navigation]);
+    // check network status
+    const NetworkConnection = async () => {
+        const network = await Check_Connection();
+        console.log("nnnn", network);
+        if (network === true) {
+            // alert('You are Offline , Please Connect')
+            showToastNotification();
+        }
+    }
+
+    // show toast notification
+    function showToastNotification() {
+        ToastAndroid.show("You are Offline", ToastAndroid.SHORT);
+    }
+    // authenticate login
+    const authenticateEntry = async () => {
+        if (userName == '' && password == '') {
+            showAuthenticationEmpty();
+        }
+        else {
+            try {
+                const authData = await authenticate_Volunteer(userName, password);
+                // const user ={userName};
+                console.log('authenticationData', authData)
+                if (authData.status === true) {
+                    await saveUserData(authData.name, authData.token);
+                    await showAuthenticationTrue();
+                    await navigationToHome();
+
+                }
+                else {
+                    showAuthenticationFalse();
+                    console.log("Authenticationjjjjjjjjjjjjjjjjjjjjjjjjjj failed");
+                }
+
+            }
+            catch (errr) {
+                console.log("Authentication failed", errr);
+                // alert("Invalid user credentials");
+                showAuthenticationFalse();
+            }
+        }
+
+    }
+
+    // navigation to home if authentication is true
+    const navigationToHome = () => {
+        navigation.replace('home');
+    }
+
+    // toast notification for login success
+    function showAuthenticationTrue() {
+        ToastAndroid.show("Login Success", ToastAndroid.SHORT);
+    }
+    // toast notification for authentication failure
+    function showAuthenticationFalse() {
+        ToastAndroid.show("Invalid credentials", ToastAndroid.SHORT);
+    }
+    // toast notification for if username and password is empty
+    function showAuthenticationEmpty() {
+        ToastAndroid.show("Please Enter a valid username and password", ToastAndroid.SHORT);
+    }
+
+
+    // avoid backnvigation
+    const handleBacknavigation = () => {
+        Alert.alert(
+            "Exit App",
+            "Do you want to exit?",
+            [
+                {
+                    text: "No",
+                    onPress: () => {
+                        navigation.navigate("Login");
+                    },
+                    style: 'cancel'
+                },
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        BackHandler.exitApp();
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+        return true;
+    };
+
+    useEffect(() => {
+        const backhandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            handleBacknavigation
+        );
+        return () => {
+            backhandler.remove();
+        }
+    }, [navigation]);
 
 
     return (
@@ -152,9 +161,9 @@ useEffect(()=>{
             {/* image view container */}
             <View style={styles.imageView}>
                 <Image style={styles.imageStyle} source={require('../../../images/ict.png')} />
-                <Text style={{fontSize:25,color:'#fff'}}>{event}</Text>
+                <Text style={{ fontSize: 25, color: '#fff' }}>{event}</Text>
             </View>
-            
+
             <View style={styles.loginBox}>
                 {/* username view */}
                 <View style={styles.authDataInputUsername}>
@@ -164,7 +173,7 @@ useEffect(()=>{
                         value={userName}
                         placeholder="Email"
                         placeholderTextColor='#aaa'
-                        onChangeText={(value)=>{
+                        onChangeText={(value) => {
                             setUserName(value);
                             console.log(`User Name changed,${value}`);
                         }}
@@ -180,7 +189,7 @@ useEffect(()=>{
                             //password when showPassword is false 
                             secureTextEntry={!showPassword}
                             value={password}
-                            onChangeText={(value)=>{
+                            onChangeText={(value) => {
                                 setPassword(value);
                                 console.log(`password,${password}`);
                             }}
@@ -216,7 +225,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#012E41',
         flex: 1,
         justifyContent: 'space-between',
-   },
+    },
 
 
     imageView: {
