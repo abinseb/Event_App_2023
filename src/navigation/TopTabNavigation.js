@@ -10,7 +10,7 @@ export default function VerifyTopTabNavigation({route}){
 
     return(
         <Tab.Navigator
-            screenOptions={{headerShown:false}}
+            screenOptions={{headerShown:false,tabBarActiveBackgroundColor:'#dcdcdc'}}
         >
             <Tab.Screen 
             name="NotVerified" 

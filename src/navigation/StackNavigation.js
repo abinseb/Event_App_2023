@@ -34,13 +34,13 @@ export default function MyStack(){
                 
                 
                 <Stack.Screen name ="bottomTab" component={BottomTabs} options={{headerShown:false}} cache={false}/>
-                <Stack.Screen name="qrscanner" component={QRCodeScanner} />
+                <Stack.Screen name="qrscanner" component={QRCodeScanner} options={{title:'Scanner'}} />
 
                
                 <Stack.Screen name="singleUserVerify" component={SingleUserVerification} options={{headerShown:false}}  />
                
                 <Stack.Screen name="TopTab" component={VerifyTopTabNavigation} />
-                <Stack.Screen name="Input Data" component={Input_data} />
+                <Stack.Screen name="Input Data" component={Input_data} options={{title:'Check'}}/>
                 <Stack.Screen name="Profile" component={VolunteerProfile} />
                
             </Stack.Navigator>

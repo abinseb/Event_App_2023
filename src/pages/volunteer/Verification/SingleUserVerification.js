@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet,Image,Text,TouchableOpacity } from 'react-native';
+import { View, StyleSheet,Image,Text,TouchableOpacity,ToastAndroid } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons,Ionicons,FontAwesome5,AntDesign } from '@expo/vector-icons';
 import { Button } from "react-native-paper";
@@ -66,7 +66,7 @@ const [groupname,setGroupname] = useState('');
   
     }
     catch(error){
-      alert("offf");
+      showToastNotificationOffline();
       const offlinedata = await userDetailsBasedOnIDFromTable(qrdata);
       console.log("offlinedata###########",offlinedata[0]);
           
@@ -78,7 +78,7 @@ const [groupname,setGroupname] = useState('');
           
         
           }
-          
+
           else{
             alert("User Not Registered");
             navigationToScan();
@@ -87,7 +87,11 @@ const [groupname,setGroupname] = useState('');
   }
     
   }
-
+// notification 
+function showToastNotificationOffline() {
+  ToastAndroid.show("You are Offline", ToastAndroid.SHORT);
+}
+//
   // verification of user based on the workshop
   const handleVerification=async()=>{
       const verification = await userVerification(qrdata,workshopname,token);
@@ -210,10 +214,10 @@ const styles = StyleSheet.create({
   },
   imageView:{
     position:'absolute',
-    top:'11%',
+    top:'7%',
     alignSelf:'center',
   },
-  imageStyle:{ margin:20,
+  imageStyle:{ 
     height:90,
     width:90
   },

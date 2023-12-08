@@ -33,7 +33,9 @@ const Input_data=({navigation})=>{
         catch(errr){
             console.log("network error",errr);
             const userid = await fetch_The_id_From_UserTable(userName);
-            console.log("userrrrr",userid);
+            qrdata.current = userid[0].id
+            console.log("userrrrr",qrdata.current);
+            navigation.navigate("singleUserVerify",{qrdata:qrdata.current});
 
         }
         

@@ -34,7 +34,7 @@
         "android.permission.ACCESS_NETWORK_STATE"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/iconict.png",
+        "foregroundImage": "./assets/ict.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.abinsebastian09.Event_app_2023"
