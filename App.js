@@ -7,6 +7,16 @@ import { Data_for_Update_UserTable, event_Data_Load, user_data_load, workshop_da
 import { insertEventTable, insertWorkshopTable, insert_To_UserTable, insert_group_table } from "./src/SQLDatabaseConnection/Insert_Table";
 import { enableScreens } from "react-native-screens";
 
+import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from 'expo-task-manager';
+import { dataFetchbasedOnTimeStamp } from "./src/API_Communication/BackgroundSync";
+
+
+TaskManager.defineTask('defaultRun', async()=>{
+
+});
+
+
 enableScreens();
 export default function App() {
   // initial rendering
@@ -31,9 +41,24 @@ const loadDataFromServerAndInsert=async()=>{
   console.log(err);
  }
 }
+
+
+useEffect(()=>{
+const timerId = setInterval(()=>{
+  dataFetchbasedOnTimeStamp();
+  console.log("update table");
+},10*1000);
+
+return()=>{
+  clearInterval(timerId);
+};
+},[]);
+
+
+
+
   return (
-  // <StackNavigation />
-  // <Demo/>
+ 
 <Provider store={store}>
 <MyStack></MyStack>
 </Provider>

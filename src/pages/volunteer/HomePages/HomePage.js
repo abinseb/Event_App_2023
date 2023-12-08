@@ -14,13 +14,7 @@ import { getUserData } from "../../../AsyncStorage/StoreUserCredentials";
 
 const HomePage =({navigation})=>{
 
-   //const {userData }= JSON.parse(AsyncStorage.getItem('userData')) || {} ;
-   //console.log("userAsync",userData);
 const [event , setEvent] = useState([]);
-// useEffect for fetching all events list in the screen
-const encodedBase64 =
-'iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==';
-
 // for storing data in redux we call useDispatch function for state updation
 const dispatch = useDispatch();
 
@@ -41,7 +35,7 @@ const dispatch = useDispatch();
          console.log("token",token);
       }
       catch(err){
-
+         console.log("user daitls not get");
       }
    }
 
@@ -119,7 +113,7 @@ const navigationToProfile=()=>{
                   <TouchableOpacity onPress={()=>{handleNavigation(workshop.title)}}>
                      <Card key={index} style={[styles.cardStyle ,{width:cardWidth -20 , height:cardWidth}]}>
                            <Card.Content >
-                          <Image style={styles.eventImage} source={{uri: `data:image/png;base64,${encodedBase64}`}} />
+                          <Image style={styles.eventImage} source={{uri: `data:image/png;base64,${workshop.icon}`}} />
                         </Card.Content>
                         <Card.Content style={styles.eventNameView}> 
                            <Title style={{ fontWeight:'300', fontSize: workshop.title.length > 6 ? 16 : 16 ,letterSpacing:0.32 , paddingBottom:10}} numberOfLines ={2} ellipsizeMode="tail">{workshop.title}</Title> 
@@ -203,9 +197,9 @@ cardContainer: {
    
  },
  eventImage:{
-   height:80,
-   width:80,
-   margin:10
+   height:90,
+   width:90,
+   
  },
  eventNameView:{
    alignSelf:'center',

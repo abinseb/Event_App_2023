@@ -34,7 +34,7 @@ export const Create_user_table=async()=>{
     console.log("workshopname",workshoplist)
    await db.transaction(tx=>{
         tx.executeSql(
-            `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT ,groupid TEXT , email TEXT, ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
+            `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT ,groupid TEXT , email TEXT,Time TEXT, ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
             [],
             ()=>console.log("created user table "),
             (error)=> console.log(error),

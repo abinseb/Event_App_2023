@@ -75,17 +75,19 @@ export const insert_To_UserTable=async()=>{
 
     try{
         const userData = await user_data_load();
-
+        
        await db.transaction((tx)=>{
             userData.forEach((user)=>{
+                console.log("timestamp",userData.time_stamp)
                tx.executeSql(
-                'INSERT INTO user_table (id,name,mobile,groupid,email)VALUES(?,?,?,?,?);',
+                'INSERT INTO user_table (id,name,mobile,groupid,email,Time)VALUES(?,?,?,?,?,?);',
                 [
                     user._id,
                     user.name,
                     user.mobile,
                     user.group,
                     user.email,
+                    user.time_stamp
                 ],
                 ()=> console.log("insert partily to userTable"),
                 (error)=> console.error("error in inserting_user_table",error)

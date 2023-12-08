@@ -66,3 +66,27 @@ export const unverification_Offline=(userid,workshop)=>{
         console.log("unverification_Transaction error", error);
     }
 }
+
+
+// background updation of local sqlite table
+export const update_local_Table=(updatedData,workshop)=>{
+    try{
+        db.transaction((tx)=>{
+            updatedData.particpants.forEach((participants)=>{
+                workshop.forEach((workshopname)=>{
+                    console.log(participants._id,workshopname);
+                    tx.executeSql(
+
+                        `UPDATE user_table SET ${workshopname} = ?, Time = ? WHERE id = ?;`,
+                        [participants.workshops[workshopname],updatedData.time,participants._id],
+                        ()=>console.log("Back ground Updation successfull"),
+                        (error)=>console.error("Error in Updation",error)
+                    )
+                })
+            })
+        })
+    }
+    catch(error){
+
+    }
+}

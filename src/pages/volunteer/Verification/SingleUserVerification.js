@@ -44,48 +44,47 @@ const [groupname,setGroupname] = useState('');
     try{
       console.log("userdata arryyaa__________",qrdata);
       const userData = await user_data_based_on_id(qrdata);
+      console.log("userdataaa",userData.length);
      
-      const singleUserData = await userData.data[0];
-   
-      //useref workshop value
-      workshopValue.current= singleUserData.workshops[workshopname];
-      console.log("workshopname",workshopValue.current)
-
-     if(singleUserData.workshops[workshopname] != 0){
-        const groupData = await groupName_from_id(singleUserData.group);
-        setGroupname(groupData);
-          console.log("groupdata",groupData);
-         await setUser(singleUserData);
-      }
-      else{
-        alert("Not Registered");
-        navigationToScan();
-      }
-    // }
-    // else{
-    //   alert("User Not Registered");
-    // }
+          const singleUserData = await userData.data[0];
       
- 
+          //useref workshop value
+          workshopValue.current= singleUserData.workshops[workshopname];
+          console.log("workshopname",workshopValue.current)
+
+        if(singleUserData.workshops[workshopname] != 0){
+            const groupData = await groupName_from_id(singleUserData.group);
+            setGroupname(groupData);
+              console.log("groupdata",groupData);
+            await setUser(singleUserData);
+          }
+          else{
+            alert("Not Registered");
+            navigationToScan();
+          }
+     
+  
     }
     catch(error){
       alert("offf");
       const offlinedata = await userDetailsBasedOnIDFromTable(qrdata);
       console.log("offlinedata###########",offlinedata[0]);
-      
-    if(Number(offlinedata[0][workshopname]) != 0){
-      workshopValue.current= (Number(offlinedata[0][workshopname]));
-      setUser(offlinedata[0]);
-      const groupdataname = await groupName_from_id(offlinedata[0].groupid);
-      setGroupname(groupdataname);
-      
-    
-      }
-      else{
-        alert("User Not Registered");
-        navigationToScan();
-      }
-    }
+          
+        if(Number(offlinedata[0][workshopname]) != 0){
+          workshopValue.current= (Number(offlinedata[0][workshopname]));
+          setUser(offlinedata[0]);
+          const groupdataname = await groupName_from_id(offlinedata[0].groupid);
+          setGroupname(groupdataname);
+          
+        
+          }
+          
+          else{
+            alert("User Not Registered");
+            navigationToScan();
+          }
+   
+  }
     
   }
 
