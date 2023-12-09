@@ -26,7 +26,8 @@ export const userVerification=async(userID,workshopName,token)=>{
         return response.data.verification;  // Return the value
     
     } catch (error) {
-        console.log("Error", error);
+        console.log("Error", error.response.status);
+        return error.response.status
     }
     
 }
@@ -50,7 +51,8 @@ export const unverify_user=async(userid,worshopname,token)=>{
         return await response.data.verification;
     }
     catch(errr){
-        console.error("error in unverification",errr);
+        console.error("error in unverification",errr.response.status);
+        return errr.response.status;
     }
 }
 

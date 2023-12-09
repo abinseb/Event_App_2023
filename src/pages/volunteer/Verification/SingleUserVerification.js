@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, StyleSheet,Image,Text,TouchableOpacity,ToastAndroid } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, StyleSheet,Image,Text,TouchableOpacity,ToastAndroid ,BackHandler} from 'react-native';
+import { SafeAreaView,SafeAreaProvider } from "react-native-safe-area-context";
 import { MaterialCommunityIcons,Ionicons,FontAwesome5,AntDesign } from '@expo/vector-icons';
 import { Button } from "react-native-paper";
 import { user_data_based_on_id } from "../../../API_Communication/Load_data";
@@ -21,8 +21,8 @@ const token = useSelector((state) => state.auth.token);
 // group name
 const [groupname,setGroupname] = useState('');
   // back navigation to scan
-  const navigationToScan=()=>{
-    navigation.navigate("ScanQRCode");
+  const navigationToScan=(screename)=>{
+    navigation.navigate(screename);
   }
 
   // workshopname
@@ -98,19 +98,44 @@ function showToastNotificationOffline() {
      await console.log("kkkk",verification);
       if(verification === true){
         alert("Verification Success");
-        navigationToScan();
+        navigationToScan(screen='ScanQRCode');
+      }
+      else if(verification === 403){
+        alert("Your session has expired due to inactivity. Please log out and log back in to continue using the application")
+        let screen = 'Profile'
+        navigationToScan(screen);
       }
       else{
         // alert("Failed");
         userVerification_Offline(qrdata,workshopname);
-        navigationToScan();
+        navigationToScan(screen='ScanQRCode');
         
       }
   }
+
+  // avoid backnavigation
+
+useEffect(()=>{
+  const handleBackPress =()=>{
+    navigationToScan(screen='ScanQRCode');
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    "hardwareBackPress",
+    handleBackPress
+  );
+
+  return ()=>{
+    backHandler.remove();
+  };
+
+},[]);
   return (
+    <SafeAreaProvider>
     <SafeAreaView style={styles.container}>
         
-          <TouchableOpacity onPress={navigationToScan} style={styles.touchable} >
+          <TouchableOpacity onPress={()=>{navigationToScan(screen = 'ScanQRCode')}} style={styles.touchable} >
             <View style={styles.backNavigationView}>
               <FontAwesome5 name="less-than" size={20} color="black" />
             </View>
@@ -171,6 +196,7 @@ function showToastNotificationOffline() {
             <Image style={styles.imageStyle} source={require('./../../../images/icon2.png')} />
         </View>
     </SafeAreaView>
+  </SafeAreaProvider>
   );
 }
 
@@ -214,7 +240,7 @@ const styles = StyleSheet.create({
   },
   imageView:{
     position:'absolute',
-    top:'7%',
+    top:'13%',
     alignSelf:'center',
   },
   imageStyle:{ 
@@ -278,8 +304,8 @@ const styles = StyleSheet.create({
     width:40,
     backgroundColor:'#ffff',
     borderRadius:22,
-    margin:10,
-    marginTop:40,
+    margin:'10%',
+    marginTop:'35%',
     alignItems:'center',
     justifyContent:'center',
 },

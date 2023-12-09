@@ -10,7 +10,7 @@ import { unverification_Offline } from "../../../SQLDatabaseConnection/Update_Ta
 import { useFocusEffect } from "@react-navigation/native";
 import BoxText from "../../../components/BoxText";
 
-const VerifiedToNotVerify = ({route}) => {
+const VerifiedToNotVerify = ({route,navigation}) => {
 
  const { groupid,groupname } = route.params;
  // workshopname from redux
@@ -51,6 +51,10 @@ const unverify_user_inGroup=async(userid)=>{
         if(unverify === true){
             setRefresh(!refresh);
         }
+        else if(unverify === 403){
+            alert("Your session has expired due to inactivity. Please log out and log back in to continue using the application.");
+            navigationToprofile();
+        }
         else{
             await unverification_Offline(userid,workshopname);
             await setRefresh(!refresh);
@@ -61,7 +65,10 @@ const unverify_user_inGroup=async(userid)=>{
     }
 }
 
-
+// navigation To profile for logout
+const navigationToprofile=()=>{
+    navigation.navigate('Profile');
+}
 
     return (
         <SafeAreaView style={styles.container}>

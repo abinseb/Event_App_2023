@@ -53,10 +53,15 @@ const token = useSelector((state) => state.auth.token);
     const updatedCheckedState =await [...isChecked];
     updatedCheckedState[index] =await !updatedCheckedState[index];
      const verification = await userVerification(id,workshopname,token);
+     console.log("verificationstatus",verification);
      if(verification === true){
         await setIsChecked(updatedCheckedState);
         setRefresh(!refresh);
      }
+     else if(verification === 403){
+      alert("Your session has expired due to inactivity. Please log out and log back in to continue using the application")
+      navigationToprofile();
+         }
      else{
       console.log("iidddd",id);
      await userVerification_Offline(id,workshopname);
@@ -67,6 +72,10 @@ const token = useSelector((state) => state.auth.token);
   };
 
 
+  // navigation to logout
+  const navigationToprofile=()=>{
+    navigation.navigate('Profile');
+  }
  
 
   return (
