@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, StyleSheet, Text, Image, ScrollView, TouchableOpacity} from "react-native";
+import { View, StyleSheet, Text, Image, ScrollView, TouchableOpacity,ToastAndroid} from "react-native";
 import { Card} from "react-native-paper";
 import { useSelector } from "react-redux";
 import { list_verifiedUserData_basedOngroup } from "../../../API_Communication/Load_data";
@@ -51,17 +51,18 @@ const unverify_user_inGroup=async(userid)=>{
         if(unverify === true){
             setRefresh(!refresh);
         }
-        else if(unverify === 403){
+        else if(unverify === 403 ){
             alert("Your session has expired due to inactivity. Please log out and log back in to continue using the application.");
             navigationToprofile();
         }
         else{
-            await unverification_Offline(userid,workshopname);
-            await setRefresh(!refresh);
+           alert("UnVerification Failed");
         }
     }
     catch(err){
         console.log("unverifyyyyFailed",err);
+        await unverification_Offline(userid,workshopname);
+        await setRefresh(!refresh);
     }
 }
 

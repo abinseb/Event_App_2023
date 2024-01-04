@@ -26,16 +26,16 @@ useEffect(()=>{
 },[])
 const loadDataFromServerAndInsert=async()=>{
  try{
-   await Create_Event_Data_Table();
-   await insertEventTable();
-  await Create_Workshops_Table();
-   await insertWorkshopTable();
-   await Create_user_table();
-  await insert_To_UserTable();
-  await Data_for_Update_UserTable();
-  await create_Offline_table();
-  await create__group_table();
-  await insert_group_table();
+  //  await Create_Event_Data_Table();
+  //  await insertEventTable();
+  // await Create_Workshops_Table();
+  //  await insertWorkshopTable();
+  //  await Create_user_table();
+  // await insert_To_UserTable();
+  // await Data_for_Update_UserTable();
+  // await create_Offline_table();
+  // await create__group_table();
+  // await insert_group_table();
  }
  catch(err){
   console.log(err);
@@ -43,16 +43,16 @@ const loadDataFromServerAndInsert=async()=>{
 }
 
 
-useEffect(()=>{
-const timerId = setInterval(()=>{
-  dataFetchbasedOnTimeStamp();
-  console.log("update table");
-},10*1000);
+// useEffect(()=>{
+// const timerId = setInterval(()=>{
+//   dataFetchbasedOnTimeStamp();
+//   console.log("update table");
+// },10*1000);
 
-return()=>{
-  clearInterval(timerId);
-};
-},[]);
+// return()=>{
+//   clearInterval(timerId);
+// };
+// },[]);
 
 
 

@@ -142,3 +142,19 @@ export const fetchThe_userId=async(emailOrMobile)=>{
     console.log("Error in fetching",error);
   }
 }
+
+
+
+export const loadAllEventData=async()=>{
+  try{
+    const eventDataList = await axios.get('http://192.168.1.122:3000/get/event')
+    const eventData = eventDataList.data.data;
+    // console.log("Event dataloaddddk",eventData);
+    const eventList = eventData.map((event)=>({id:event._id,title:event.title}))
+    // console.log("Dataaa",eventList);
+    return await eventList;
+  }
+  catch(error){
+    console.error("Error in load Data",error);
+  }
+}

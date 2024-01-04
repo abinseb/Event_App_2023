@@ -6,7 +6,7 @@ const db = openDatabase('Event.db');
 export const  Create_Event_Data_Table=()=>{
     db.transaction(tx=>{
         tx.executeSql(
-            'CREATE TABLE IF NOT EXISTS event_table (id TEXT PRIMARY KEY ,title TEXT,description TEXT,host TEXT,date TEXT,venu TEXT,img BLOB);',
+            'CREATE TABLE IF NOT EXISTS event_table (id TEXT PRIMARY KEY ,title TEXT,description TEXT,host TEXT,date TEXT,venu TEXT,img TEXT);',
             [],
             ()=>console.log('Event table created'),
             error => console.error('Error event :',error)

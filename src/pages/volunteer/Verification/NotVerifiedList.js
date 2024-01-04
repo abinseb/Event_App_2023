@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, StyleSheet, Text, Image, ScrollView } from "react-native";
+import { View, StyleSheet, Text, Image, ScrollView ,ToastAndroid} from "react-native";
 import { Card, Checkbox } from "react-native-paper";
 import { List_userbasedOn_group } from "../../../API_Communication/Load_data";
 import { useSelector } from "react-redux";
@@ -48,30 +48,41 @@ const token = useSelector((state) => state.auth.token);
   
 
   const handleCheckboxPressed = async (id, index) => {
+    try{
     // Toggle checkbox state
     console.log("token____________",token);
     const updatedCheckedState =await [...isChecked];
     updatedCheckedState[index] =await !updatedCheckedState[index];
      const verification = await userVerification(id,workshopname,token);
      console.log("verificationstatus",verification);
-     if(verification === true){
+     if(verification === true ){
         await setIsChecked(updatedCheckedState);
         setRefresh(!refresh);
+        
      }
-     else if(verification === 403){
+     else if(verification === 403 ){
       alert("Your session has expired due to inactivity. Please log out and log back in to continue using the application")
       navigationToprofile();
          }
      else{
-      console.log("iidddd",id);
-     await userVerification_Offline(id,workshopname);
+      alert("verification failedd");
+     }
+    }
+    catch(error){
+      console.log("Verification error",error);
+      //console.log("iidddd",id);
+      const updatedCheckedState =await [...isChecked];
+      await userVerification_Offline(id,workshopname);
       await setIsChecked(updatedCheckedState);
       setRefresh(!refresh);
-     }
+    }
     
   };
 
-
+// notification alert
+function showToastNotificationverification() {
+  ToastAndroid.show("Verified", ToastAndroid.SHORT);
+}
   // navigation to logout
   const navigationToprofile=()=>{
     navigation.navigate('Profile');

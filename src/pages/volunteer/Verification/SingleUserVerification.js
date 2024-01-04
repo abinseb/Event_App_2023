@@ -91,26 +91,36 @@ const [groupname,setGroupname] = useState('');
 function showToastNotificationOffline() {
   ToastAndroid.show("You are Offline", ToastAndroid.SHORT);
 }
+
+function showToastNotificationverification() {
+  ToastAndroid.show("Verified", ToastAndroid.SHORT);
+}
 //
   // verification of user based on the workshop
   const handleVerification=async()=>{
+    try{
       const verification = await userVerification(qrdata,workshopname,token);
      await console.log("kkkk",verification);
-      if(verification === true){
-        alert("Verification Success");
+      if(verification === true ){
+       showToastNotificationverification();
         navigationToScan(screen='ScanQRCode');
       }
-      else if(verification === 403){
+      else if(verification === 403 ){
         alert("Your session has expired due to inactivity. Please log out and log back in to continue using the application")
         let screen = 'Profile'
         navigationToScan(screen);
       }
       else{
-        // alert("Failed");
-        userVerification_Offline(qrdata,workshopname);
-        navigationToScan(screen='ScanQRCode');
-        
+       
+        alert('Verification Failed');
       }
+    }
+    catch(error){
+      console.log("VerificationError",error);
+     // alert("Offline verification Failed");
+      userVerification_Offline(qrdata,workshopname);
+      navigationToScan(screen='ScanQRCode');
+    }
   }
 
   // avoid backnavigation
@@ -240,7 +250,7 @@ const styles = StyleSheet.create({
   },
   imageView:{
     position:'absolute',
-    top:'13%',
+    top:'9%',
     alignSelf:'center',
   },
   imageStyle:{ 

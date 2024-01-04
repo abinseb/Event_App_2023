@@ -1,5 +1,5 @@
 export const URL_Connection=()=>{
-    const apiurl = 'http://43.205.112.24:3000';
+    const apiurl = 'http://192.168.1.122:3000';
     return apiurl;
 }
 
