@@ -1,5 +1,34 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+export const saveEventId=async(eventid)=>{
+    try{
+        await AsyncStorage.setItem('EventId',eventid);
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const getEventId=async()=>{
+    try{
+        const EventId = await AsyncStorage.getItem('EventId');
+        console.log(EventId)
+        return await EventId;
+    }
+    catch(err){
+        console.error(err);
+    }
+}
+
+export const removeEventId =async()=>{
+    try{
+       
+        await AsyncStorage.removeItem('EventId');
+    }
+    catch(err){
+        console.log(err);
+    }
+}
 // To save user data (username and , token)
 export const saveUserData = async(username,token)=>{
     try{

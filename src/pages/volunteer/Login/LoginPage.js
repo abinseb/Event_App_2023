@@ -8,9 +8,12 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Check_Connection } from "../../../API_Communication/Check_connection";
 import { eventDataFetch, user_Table_data } from "../../../SQLDatabaseConnection/FetchDataFromTable";
 import { authenticate_Volunteer } from "../../../API_Communication/Athentication";
-import { getUserData, saveUserData } from "../../../AsyncStorage/StoreUserCredentials";
+import { getEventId, getUserData, saveUserData } from "../../../AsyncStorage/StoreUserCredentials";
 
 import { useNavigation } from "@react-navigation/native";
+import { Create_Event_Data_Table, Create_Workshops_Table, Create_user_table, create_Offline_table, create__group_table } from "../../../SQLDatabaseConnection/Create_Table";
+import { insertEventTable, insertWorkshopTable, insert_To_UserTable, insert_group_table } from "../../../SQLDatabaseConnection/Insert_Table";
+import { Data_for_Update_UserTable, event_Data_Load } from "../../../API_Communication/Load_data";
 
 const Login = ({ navigation }) => {
     const [event, setEvent] = useState('');
@@ -34,27 +37,48 @@ const Login = ({ navigation }) => {
  
     const [loginstate,setLoginState] = useState(null);
 
-    useEffect(async() => {
+    const [eventDetails , setEventDetails] = useState([]);
 
+    useEffect(() => {
+
+        // const {username,token} = await getUserData();
+        // if(token === null){
+        //     NetworkConnection();
+        //     // GetEventDetails_load();
+        // }
+        // else{
+        //     navigationToHome();
+        // }
+        checktheAuthenticity();
+    }, [])
+
+    const checktheAuthenticity=async()=>{
+        const eventid = await getEventId();
+        console.log("eventidkkkkkkkkkkkk",eventid);
         const {username,token} = await getUserData();
+        console.log("token",token);
         if(token === null){
             NetworkConnection();
-            EventData();
+            GetEventDetails_load();
         }
         else{
             navigationToHome();
-        }
-
-    }, [event])
+        }    
+    }
 
     // update user tabel
+const GetEventDetails_load=async()=>{
+    const eventdata = await event_Data_Load();
+    console.log("EventDetails",eventdata.data);
+    setEventDetails(eventdata);
 
+}
 
-    const EventData = async () => {
-        const eventName = await eventDataFetch();
-        await console.log("eventname", eventName.title);
-        setEvent(eventName.title);
-    }
+    // const EventData = async () => {
+    //     const eventName = await eventDataFetch();
+    //     await console.log("eventname", eventName.title);
+    //     setEvent(eventName.title);
+    // }
     // check network status
     const NetworkConnection = async () => {
         const network = await Check_Connection();
@@ -81,6 +105,7 @@ const Login = ({ navigation }) => {
                 console.log('authenticationData', authData)
                 if (authData.status === true) {
                     await saveUserData(authData.name, authData.token);
+                    await createTableAndLoadDataFromServer();
                     await showAuthenticationTrue();
                     await navigationToHome();
 
@@ -119,42 +144,27 @@ const Login = ({ navigation }) => {
     }
 
 
-    // avoid backnvigation
-    const handleBacknavigation = () => {
-        Alert.alert(
-            "Exit App",
-            "Do you want to exit?",
-            [
-                {
-                    text: "No",
-                    onPress: () => {
-                        navigation.navigate("Login");
-                    },
-                    style: 'cancel'
-                },
-                {
-                    text: "Yes",
-                    onPress: () => {
-                        BackHandler.exitApp();
-                    }
-                }
-            ],
-            { cancelable: false }
-        );
-        return true;
-    };
+   
 
-    useEffect(() => {
-        const backhandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            handleBacknavigation
-        );
-        return () => {
-            backhandler.remove();
+
+    const createTableAndLoadDataFromServer = async () => {
+        try {
+            await Promise.all([
+                Create_Event_Data_Table(),
+                insertEventTable(),
+                Create_Workshops_Table(),
+                insertWorkshopTable(),
+                Create_user_table(),
+                insert_To_UserTable(),
+                Data_for_Update_UserTable(),
+                create_Offline_table(),
+                create__group_table(),
+                insert_group_table()
+            ]);
+        } catch (err) {
+            console.log(err);
         }
-    }, [navigation]);
-
-
+    }
     return (
         <KeyboardAwareScrollView contentContainerStyle={styles.container}>
 

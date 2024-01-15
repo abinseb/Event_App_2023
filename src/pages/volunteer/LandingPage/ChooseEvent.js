@@ -1,92 +1,142 @@
 import React, { useEffect, useState } from "react";
-import { View,Text,StyleSheet ,Image} from "react-native";
+import { View, Text, StyleSheet, Image , Alert ,BackHandler} from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-import { EvilIcons,Entypo,AntDesign } from '@expo/vector-icons'; 
+import { EvilIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import { loadAllEventData } from "../../../API_Communication/Load_data";
-const ChooseEvent=()=>{
-    const [selected,setSelected] = useState('');
-    const [eventList,setEventList] = useState([])
+import {  getUserData, saveEventId } from "../../../AsyncStorage/StoreUserCredentials";
 
-    useEffect(()=>{
-        Load_Event_Data();
-    },[])
-    const data = [
-        {key:'1', value:'Mobiles', disabled:true},
-        {key:'2', value:'Appliances'},
-        {key:'3', value:'Cameras'},
-        {key:'4', value:'Computers', disabled:true},
-        {key:'5', value:'Vegetables'},
-        {key:'6', value:'Diary Products'},
-        {key:'7', value:'Drinks'},
-    ]
+const ChooseEvent = ({navigation}) => {
+  const [selected, setSelected] = useState(null);
+  const [eventList, setEventList] = useState([]);
 
-    const Load_Event_Data=async()=>{
+  useEffect(() => {
+
+    loadEventData();
+  }, []);
+
+  const loadEventData = async () => {
+  
+    const {username,token} = await getUserData();
+    console.log("tokenfetch",token);
+    if(token === null){
         const eventListData = await loadAllEventData();
-        console.log(eventListData);
+        console.log("elseeeeeeee");
         const transformedData = eventListData.map(event => ({
-            key: event._id, // Assuming _id is the unique identifier
-            value: event.title,
-            disabled: false, // You may adjust this based on your logic
-          }));
+          key: event.id,
+          value: event.title,
+          disabled: false,
+        }));
+        console.log(transformedData)
         setEventList(transformedData);
-
     }
+    else{
+      navigationToNext('home');
+    }
+  // };
+}
 
-    return(
-        <View style={styles.container} >
-            <View style={styles.image_View}>
-                <Image style={styles.image_style} source={require('../../../images/LOGO_ICTAK-ENG-ALT-White-Text.png')} />
-            </View>
-            <View style={styles.dropDownListContainer}>
-                <Text style={styles.textTop}>Choose the Event</Text>
-                <SelectList 
-                    setSelected={(val) => setSelected(val)} 
-                    data={eventList} 
-                    save="value"
-                   searchicon={<EvilIcons name="search" size={24} color="white" />}
-                   inputStyles={{color:'#fff'}}
-                    boxStyles={{borderWidth:1,borderColor:'#fff'}}
-                    dropdownTextStyles={{color:'#ffff'}}
-                    closeicon={<Entypo name="cross" size={24} color="white" />}
-                    arrowicon={<AntDesign name="down" size={24} color="white" />}
-                    searchPlaceholder={null}
-                    // search={false} 
-                    
-                />
-            </View>
-           
-        </View>
-    )
+  const handleSelectEvent =async (evntid) => {
+    alert(evntid);
+    await saveEventId(evntid);
+    await navigationToNext('Login');
+
+    
+  };
+
+  const navigationToNext=(path)=>{
+    navigation.navigate(path);
+  }
+
+
+
+
+  // avoid backnvigation
+  const handleBacknavigation = () => {
+    Alert.alert(
+        "Exit App",
+        "Do you want to exit?",
+        [
+            {
+                text: "No",
+                onPress: () => {
+                    navigation.navigate("entrypage");
+                },
+                style: 'cancel'
+            },
+            {
+                text: "Yes",
+                onPress: () => {
+                    BackHandler.exitApp();
+                }
+            }
+        ],
+        { cancelable: false }
+    );
+    return true;
+};
+
+useEffect(() => {
+    const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBacknavigation
+    );
+    return () => {
+        backhandler.remove();
+    }
+}, [navigation]);
+
+
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.image_View}>
+        <Image style={styles.image_style} source={require('../../../images/LOGO_ICTAK-ENG-ALT-White-Text.png')} />
+      </View>
+      <View style={styles.dropDownListContainer}>
+        <Text style={styles.textTop}>Choose the Event</Text>
+        <SelectList
+          setSelected={setSelected}
+          data={eventList}
+          save="key"
+          searchicon={<EvilIcons name="search" size={24} color="white" />}
+          inputStyles={{ color: '#fff' }}
+          boxStyles={{ borderWidth: 1, borderColor: '#fff' }}
+          dropdownTextStyles={{ color: '#ffff' }}
+          closeicon={<Entypo name="cross" size={24} color="white" />}
+          arrowicon={<AntDesign name="down" size={24} color="white" />}
+          searchPlaceholder={null}
+          onSelect={()=>handleSelectEvent(selected)}
+        />
+      </View>
+    </View>
+  );
 }
 
 export default ChooseEvent;
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor:'#012E41',
-    //    justifyContent:'space-evenly'
-    },
-    image_View :{
-        justifyContent:'center',
-        alignSelf:'center',
-        flex:0.4
-    },
-    image_style:{
-        height:80,
-        width:250
-        
-    },
-    dropDownListContainer:{
-        flex:0.6,
-        alignSelf:'center',
-        width:'100%',
-        padding:10
-    },
-
-    textTop:{
-        color:'#fff',
-        alignSelf:'flex-start',
-        paddingBottom:6
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: '#012E41',
+  },
+  image_View: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    flex: 0.4
+  },
+  image_style: {
+    height: 80,
+    width: 250
+  },
+  dropDownListContainer: {
+    flex: 0.6,
+    alignSelf: 'center',
+    width: '100%',
+    padding: 10
+  },
+  textTop: {
+    color: '#fff',
+    alignSelf: 'flex-start',
+    paddingBottom: 6
+  }
+});

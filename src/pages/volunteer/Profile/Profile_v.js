@@ -5,16 +5,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { logoutSuccess } from "../../../redux/Actions";
 import { deleteAllTables } from "../../../SQLDatabaseConnection/Drop_table";
-import { removeUserData } from "../../../AsyncStorage/StoreUserCredentials";
+import { removeEventId, removeUserData } from "../../../AsyncStorage/StoreUserCredentials";
 const VolunteerProfile=()=>{
 const dispatch = useDispatch();
 
     const log_Out_fromDevice=async()=>{
         try{
             await removeUserData();
-           await dispatch(logoutSuccess());
-           await deleteAllTables();
-           await exit_App();
+            await removeEventId();
+            await dispatch(logoutSuccess());
+            await deleteAllTables();
+            await exit_App();
 
         }
         catch(errr){

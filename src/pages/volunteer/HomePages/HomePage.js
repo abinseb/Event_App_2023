@@ -43,12 +43,12 @@ const dispatch = useDispatch();
       try {
           const workshop = await workshopDataFetch();
          //  console.log("Workshop title:", workshop);
-          workshop.forEach( element => {
-            element.title = capitalizeWord(element.title);
-           console.log("icon______________",element.icon);
+         //  workshop.forEach( element => {
+         //    element.title = capitalizeWord(element.title);
+         //   console.log("icon______________",element.icon);
            
              
-          });
+         //  });
           console.log("icon daataaa",workshop.icon);
           setEvent(workshop);
       } catch (error) {
@@ -80,8 +80,9 @@ const cardWidth = (screenWidth - 40) / 2;
 
 // navigation to scan
 const handleNavigation=async(workshop)=>{
-   const workshopName = await reverseCapitalise(workshop)
-   await dispatch(worshopSelect(workshopName))
+   // const workshopName = await reverseCapitalise(workshop)
+   console.log("workshopp****************",workshop);
+   await dispatch(worshopSelect(workshop))
   await navigation.navigate("bottomTab");
 }
 
@@ -116,7 +117,7 @@ const navigationToProfile=()=>{
                           <Image style={styles.eventImage} source={{uri: `data:image/png;base64,${workshop.icon}`}} />
                         </Card.Content>
                         <Card.Content style={styles.eventNameView}> 
-                           <Title style={{ fontWeight:'300', fontSize: workshop.title.length > 6 ? 16 : 16 ,letterSpacing:0.32 , paddingBottom:10}} numberOfLines ={2} ellipsizeMode="tail">{workshop.title}</Title> 
+                           <Title style={{ fontWeight:'300', fontSize: workshop.title.length > 6 ? 16 : 16 ,letterSpacing:0.32 , paddingBottom:10}} numberOfLines ={2} ellipsizeMode="tail">{capitalizeWord(workshop.title)}</Title> 
                         </Card.Content>
                      </Card>
                   </TouchableOpacity>

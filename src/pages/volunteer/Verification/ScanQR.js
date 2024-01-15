@@ -9,6 +9,8 @@ import { offline_verifiedUser_data } from "../../../SQLDatabaseConnection/FetchD
 import { check_Offline_table_Count } from "../../../SQLDatabaseConnection/Fetch_Count_of_Table";
 import { sync_OfflineData_verification } from "../../../API_Communication/Verification";
 import { deleteOfflineTable } from "../../../SQLDatabaseConnection/deleteTable";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 const ScanQR=({navigation})=>{
     const [scanner,setScanner]= useState(false);
 
@@ -19,11 +21,17 @@ const ScanQR=({navigation})=>{
 
     const [refresh , setrefresh] = useState(false);
 
-    useEffect(()=>{
-        offline_verified_count();
-        setCapitalWorkshop(Capitalise(workshopName));
-    },[refresh])
+    // useEffect(()=>{
+    //     offline_verified_count();
+    //     setCapitalWorkshop(Capitalise(workshopName));
+    // },[refresh])
 
+    useFocusEffect(
+        useCallback(()=>{
+            offline_verified_count();
+            setCapitalWorkshop(Capitalise(workshopName)); 
+        },[refresh])
+    )
    
     // workshop name capitalise to normal
 function Capitalise(word) {

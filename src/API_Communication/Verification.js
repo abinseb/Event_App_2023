@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { URL_Connection,eventID } from "../connection/Url_connection";
+import { getEventId } from "../AsyncStorage/StoreUserCredentials";
 
 
 // fetch url
@@ -10,10 +11,12 @@ const url = URL_Connection();
 const eventid = eventID();
 
 export const userVerification=async(userID,workshopName,token)=>{
+    const event_id = await getEventId();
+    console.log("eventidddd",event_id);
     try {
-        console.log(userID, workshopName, eventid,token);
+        console.log(userID, workshopName, event_id,token);
         const response = await axios.post(`${url}/volunter/verify`, {
-            "eventid": eventid,
+            "eventid":event_id,
             "workshop": workshopName,
             "userid": userID
         },{
@@ -22,7 +25,7 @@ export const userVerification=async(userID,workshopName,token)=>{
             },
         });
     
-        console.log(response.data.verification);
+        console.log(response.data);
         return response.data.verification;  // Return the value
     
     } catch (error) {
@@ -36,10 +39,11 @@ export const userVerification=async(userID,workshopName,token)=>{
 
 
 export const unverify_user=async(userid,worshopname,token)=>{
+    const event_id = await getEventId();
     try{
         console.log("dtaaaa",userid,worshopname);
         const response = await axios.post(`${url}/volunter/unverify`,{
-            "eventid":eventid,
+            "eventid":event_id,
             "workshop" : worshopname,
             "userid" : userid
         },{
@@ -59,9 +63,10 @@ export const unverify_user=async(userid,worshopname,token)=>{
 // http://localhost:3000/volunter/sync
 
 export const sync_OfflineData_verification=async(offlineData)=>{
+    const event_id = await getEventId();
     try{
       const response = await axios.post(`${url}/volunter/sync`,{
-            "event" : eventid,
+            "event" : event_id,
             "data" :offlineData,
         });
         console.log(response.data);

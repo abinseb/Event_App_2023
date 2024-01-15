@@ -27,9 +27,10 @@ export default function MyStack(){
     return(
         <NavigationContainer>
          
-            <Stack.Navigator initialRouteName="Login">
+            <Stack.Navigator initialRouteName="entrypage">
                 
-                <Stack.Screen name="Login" component={ChooseEvent} options={{headerShown:false}} />
+            <Stack.Screen name="entrypage" component={ChooseEvent} options={{headerShown:false}} />
+                <Stack.Screen name="Login" component={Login} options={{headerShown:false}} />
            
                 <Stack.Screen name="home" component={HomePage} options={{headerShown:false}} />
                 

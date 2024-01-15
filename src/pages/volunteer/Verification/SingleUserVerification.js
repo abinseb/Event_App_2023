@@ -44,7 +44,7 @@ const [groupname,setGroupname] = useState('');
     try{
       console.log("userdata arryyaa__________",qrdata);
       const userData = await user_data_based_on_id(qrdata);
-      console.log("userdataaa",userData.length);
+      console.log("userdataaa",userData);
      
           const singleUserData = await userData.data[0];
       
@@ -66,6 +66,7 @@ const [groupname,setGroupname] = useState('');
   
     }
     catch(error){
+      console.error("catcherror",error)
       showToastNotificationOffline();
       const offlinedata = await userDetailsBasedOnIDFromTable(qrdata);
       console.log("offlinedata###########",offlinedata[0]);
@@ -98,6 +99,7 @@ function showToastNotificationverification() {
 //
   // verification of user based on the workshop
   const handleVerification=async()=>{
+    console.log("workshopname#######",workshopname);
     try{
       const verification = await userVerification(qrdata,workshopname,token);
      await console.log("kkkk",verification);
