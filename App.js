@@ -43,16 +43,16 @@ const loadDataFromServerAndInsert=async()=>{
 }
 
 
-// useEffect(()=>{
-// const timerId = setInterval(()=>{
-//   dataFetchbasedOnTimeStamp();
-//   console.log("update table");
-// },10*1000);
+useEffect(()=>{
+const timerId = setInterval(()=>{
+  dataFetchbasedOnTimeStamp();
+  console.log("update table");
+},10*1000);
 
-// return()=>{
-//   clearInterval(timerId);
-// };
-// },[]);
+return()=>{
+  clearInterval(timerId);
+};
+},[]);
 
 
 

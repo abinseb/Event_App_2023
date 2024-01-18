@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {View,Text,StyleSheet, Image,ScrollView, Dimensions,TouchableOpacity,BackHandler,Alert} from 'react-native';
+import {View,Text,StyleSheet, Image,ScrollView, Dimensions,TouchableOpacity} from 'react-native';
 import { Card,Title,} from "react-native-paper";
 import {SafeAreaView} from 'react-native-safe-area-context'
 import { useDispatch,useSelector } from "react-redux";
@@ -42,14 +42,7 @@ const dispatch = useDispatch();
    const workshopData = async () => {
       try {
           const workshop = await workshopDataFetch();
-         //  console.log("Workshop title:", workshop);
-         //  workshop.forEach( element => {
-         //    element.title = capitalizeWord(element.title);
-         //   console.log("icon______________",element.icon);
-           
-             
-         //  });
-          console.log("icon daataaa",workshop.icon);
+         
           setEvent(workshop);
       } catch (error) {
           console.error("Error fetching workshop data:", error);
@@ -86,10 +79,7 @@ const handleNavigation=async(workshop)=>{
   await navigation.navigate("bottomTab");
 }
 
-// workshop name capitalise to normal
-function reverseCapitalise(word) {
-   return word.charAt(0).toLowerCase() + word.slice(1);
- }
+
 
 // navigation To profile
 const navigationToProfile=()=>{

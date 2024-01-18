@@ -19,7 +19,7 @@ const Login = ({ navigation }) => {
     const [event, setEvent] = useState('');
     // render network status
 
-//const navigation = useNavigation();
+    //const navigation = useNavigation();
 
     // State variable to hold the password 
     const [password, setPassword] = useState('');
@@ -34,10 +34,10 @@ const Login = ({ navigation }) => {
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
- 
-    const [loginstate,setLoginState] = useState(null);
 
-    const [eventDetails , setEventDetails] = useState([]);
+    const [loginstate, setLoginState] = useState(null);
+
+    const [eventDetails, setEventDetails] = useState([]);
 
     useEffect(() => {
 
@@ -52,27 +52,27 @@ const Login = ({ navigation }) => {
         checktheAuthenticity();
     }, [])
 
-    const checktheAuthenticity=async()=>{
+    const checktheAuthenticity = async () => {
         const eventid = await getEventId();
-        console.log("eventidkkkkkkkkkkkk",eventid);
-        const {username,token} = await getUserData();
-        console.log("token",token);
-        if(token === null){
+        console.log("eventidkkkkkkkkkkkk", eventid);
+        const { username, token } = await getUserData();
+        console.log("token", username, token);
+        if (token === null) {
             NetworkConnection();
             GetEventDetails_load();
         }
-        else{
+        else {
             navigationToHome();
-        }    
+        }
     }
 
     // update user tabel
-const GetEventDetails_load=async()=>{
-    const eventdata = await event_Data_Load();
-    console.log("EventDetails",eventdata.data);
-    setEventDetails(eventdata);
+    const GetEventDetails_load = async () => {
+        const eventdata = await event_Data_Load();
+        console.log("EventDetails", eventdata.data);
+        setEventDetails(eventdata);
 
-}
+    }
 
     // const EventData = async () => {
     //     const eventName = await eventDataFetch();
@@ -144,22 +144,22 @@ const GetEventDetails_load=async()=>{
     }
 
 
-   
+
 
 
     const createTableAndLoadDataFromServer = async () => {
         try {
             await Promise.all([
-                Create_Event_Data_Table(),
-                insertEventTable(),
-                Create_Workshops_Table(),
-                insertWorkshopTable(),
-                Create_user_table(),
-                insert_To_UserTable(),
-                Data_for_Update_UserTable(),
-                create_Offline_table(),
-                create__group_table(),
-                insert_group_table()
+                await Create_Event_Data_Table(),
+                await Create_Workshops_Table(),
+                await Create_user_table(),
+                await create__group_table(),
+                await insertEventTable(),
+                await insertWorkshopTable(),
+                await insert_To_UserTable(),
+                await Data_for_Update_UserTable(),
+                await create_Offline_table(),
+                await insert_group_table()
             ]);
         } catch (err) {
             console.log(err);

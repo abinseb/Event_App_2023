@@ -10,14 +10,19 @@ const ChooseEvent = ({navigation}) => {
   const [eventList, setEventList] = useState([]);
 
   useEffect(() => {
-
+    // const EntryCheck=async()=>{
+    //   console.log("hello");
+    //   const {username ,token} =await getUserData();
+    //   console.log("display status",username,token);
+    // }
+    // EntryCheck()
     loadEventData();
   }, []);
 
   const loadEventData = async () => {
-  
+    console.log("evettttttttttloadddd");
     const {username,token} = await getUserData();
-    console.log("tokenfetch",token);
+    console.log("tokenfetch",token,"name",username);
     if(token === null){
         const eventListData = await loadAllEventData();
         console.log("elseeeeeeee");
@@ -30,7 +35,7 @@ const ChooseEvent = ({navigation}) => {
         setEventList(transformedData);
     }
     else{
-      navigationToNext('home');
+     navigation.replace("home");
     }
   // };
 }

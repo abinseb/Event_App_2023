@@ -52,6 +52,11 @@ export const getUserData =async()=>{
             console.log("user credentials in asyncstorage",parsedUserData);
             return {username , token};
         }
+        else{
+            console.log("username and token are null");
+            
+            return { username: null, token: null };
+        }
     }
     catch(error){
         console.error('Error retriving user Data',error);

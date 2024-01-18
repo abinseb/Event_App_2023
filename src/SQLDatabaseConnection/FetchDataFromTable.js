@@ -45,7 +45,7 @@ export const workshopDataFetch = async () => {
                     (_, { rows }) => {
                         const workshopData = rows._array;
                         if (workshopData.length > 0) {
-                            console.log("wwww", workshopData);
+                            // console.log("wwww", workshopData);
                             resolve(workshopData); // Resolve the promise with the workshop data
                         } else {
                             resolve([]); // Resolve with an empty array if no workshops are found

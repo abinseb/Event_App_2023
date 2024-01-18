@@ -31,16 +31,70 @@ export const Create_Workshops_Table=()=>{
 export const Create_user_table=async()=>{
     const workshopData = await workshop_data_load();
     const workshoplist = await workshopData.map(item => item.title);
-    console.log("workshopname",workshoplist)
+    console.log("workshopname******",workshoplist)
    await db.transaction(tx=>{
         tx.executeSql(
             `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT ,groupid TEXT , email TEXT,Time TEXT, ${workshoplist.map((workshop,index)=>`${workshop} TEXT`)})`,
             [],
-            ()=>console.log("created user table "),
-            (error)=> console.log(error),
+            ()=>console.log("created user table****************************** "),
+            (error)=> console.log("errorin creating usertable",error),
         );
     });
 }
+
+// create user table dynamicaly
+// export const Create_user_table=async()=>{
+//     const workshopData = await workshop_data_load();
+//     const workshoplist = await workshopData.map(item => item.title);
+//     console.log("workshopname******",workshoplist)
+//    await db.transaction(tx=>{
+//         tx.executeSql(
+//             `CREATE TABLE IF NOT EXISTS user_table(id TEXT PRIMARY KEY , name TEXT,mobile TEXT ,groupid TEXT , email TEXT,Time TEXT,   ibm TEXT, google TEXT,github TEXT,dgshd TEXT,dgfgfhv TEXT,worksho12 TEXT,dbfdg TEXT,sdsd TEXT,dfdsfd TEXT)`,
+//             [],
+//             ()=>console.log("created user table****************************** "),
+//             (error)=> console.log("errorin creating usertable",error),
+//         );
+//     });
+// }
+// export const Create_user_table = async () => {
+//     const workshopData = await workshop_data_load();
+//     const workshoplist = await workshopData.map(item => item.title);
+//     console.log("workshopname******", workshoplist);
+
+//     await db.transaction(tx => {
+//         // const workshopColumns = workshoplist.map(workshop => `${workshop} TEXT`).join(', ');
+//         const createTableQuery = `
+//             CREATE TABLE IF NOT EXISTS user_table(
+//                 id TEXT PRIMARY KEY,
+//                 name TEXT,
+//                 mobile TEXT,
+//                 groupid TEXT,
+//                 email TEXT,
+//                 Time TEXT,
+//                 oracle TEXT,
+                // ibm TEXT,
+                // google TEXT,
+                // github TEXT,
+                // dgshd TEXT,
+                // dgfgfhv TEXT,
+                // worksho12 TEXT,
+                // dbfdg TEXT,
+                // sdsd TEXT,
+                // dfdsfd TEXT,
+                // github TEXT
+
+//             )
+//         `;
+
+//         tx.executeSql(
+//             createTableQuery,
+//             [],
+//             () => console.log("created user table****************************** "),
+//             (error) => console.log("error in creating user table", error),
+//         );
+//     });
+// };
+
 
 
 // list the tables in the db
